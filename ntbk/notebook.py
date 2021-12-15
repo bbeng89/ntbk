@@ -3,11 +3,11 @@ from config import load_config
 
 def notebook_exists():
     conf = load_config()
-    return Path(conf['notebook_dir']).expanduser().exists()
+    return Path(conf['ntbk_dir']).expanduser().exists()
 
 def create_notebook():
     conf = load_config()
-    notebook_path = Path(conf['notebook_dir']).expanduser()
+    notebook_path = Path(conf['ntbk_dir']).expanduser()
     subfolders = ['collections', 'log']
     notebook_path.mkdir(parents=True, exist_ok=True)
 

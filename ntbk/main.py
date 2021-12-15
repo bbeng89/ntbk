@@ -5,7 +5,7 @@ import notebook
 
 def init_config_file():
     if not config.config_exists():
-        config.save_config({'notebook_dir': ''})
+        config.save_config({'ntbk_dir': ''})
 
 def init_notebook():
     if not config.config_exists():
@@ -13,8 +13,8 @@ def init_notebook():
     
     conf = config.load_config()
 
-    if not conf['notebook_dir']:
-        conf['notebook_dir'] = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
+    if not conf['ntbk_dir']:
+        conf['ntbk_dir'] = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
         config.save_config(conf)
     
     if not notebook.notebook_exists():
