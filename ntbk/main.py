@@ -1,29 +1,32 @@
+import os
 import argparse
-from actions.initialize import initialize
+from pathlib import Path
+from actions import initialize, logfile
 import config
-import notebook
 
-def init_config_file():
-    if not config.config_exists():
-        config.save_config({'ntbk_dir': ''})
+def open_file_in_editor(file):
+    """Creates directories, but not file. Its up to the user to save the file if they want it."""
 
-def init_notebook():
-    if not config.config_exists():
-        raise Exception("Can't initialize notebook until config file has been created")
-    
     conf = config.load_config()
+    base_path = Path(conf['ntbk_dir']).expanduser()
+    file_path = Path(file)
+    full_path = base_path / file_path
+    full_path.parent.mkdir(parents=True, exist_ok=True)
+    os.system(f"{conf['editor']} {full_path}")
 
-    if not conf['ntbk_dir']:
-        conf['ntbk_dir'] = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
-        config.save_config(conf)
-    
-    if not notebook.notebook_exists():
-        notebook.create_notebook()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='ntbk - a terminal notebook application')
+    initialize.init_app()
+
+    parser = argparse.ArgumentParser(prog='ntbk', description='a terminal notebook application')
     parser.add_argument('command')
+
+    # todo - these will be used later for commands that have other args
+    #subparsers = parser.add_subparsers()
+    #parser_today = subparsers.add_parser('today', help="Load today's log file")
+    
     args = parser.parse_args()
 
-    init_config_file()
-    init_notebook()
+    if logfile.is_logfile_command(args.command):
+        open_file_in_editor(logfile.get_logfile(args.command))
+    

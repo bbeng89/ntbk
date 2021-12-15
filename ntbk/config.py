@@ -2,7 +2,7 @@ from pathlib import Path
 import yaml
 
 APP_CONFIG = {
-    'config_filepath': '/home/blake/.config/ntbk/ntbk.yml'
+    'config_filepath': '~/.config/ntbk/ntbk.yml'
 }
 
 _config_path = Path(APP_CONFIG['config_filepath']).expanduser()
