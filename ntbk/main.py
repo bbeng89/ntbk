@@ -19,7 +19,7 @@ if __name__ == '__main__':
     initialize.init_app()
 
     parser = argparse.ArgumentParser(prog='ntbk', description='a terminal notebook application')
-    parser.add_argument('command')
+    parser.add_argument('command', nargs='?', default='today')
 
     # todo - these will be used later for commands that have other args
     #subparsers = parser.add_subparsers()
