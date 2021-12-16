@@ -3,8 +3,9 @@ import config
 import argparse
 from pathlib import Path
 from datetime import date 
-from commands import initialize, logfile
 from templater import Templater
+from colorama import Fore, Style
+from commands import initialize, logfile, template
 
 class Dispatcher():
 
@@ -16,6 +17,7 @@ class Dispatcher():
         self.subparsers = self.parser.add_subparsers(dest='command')
         self.configure_log_args()
         self.configure_collection_args()
+        self.configure_other_args()
         
 
     def run(self):
@@ -38,7 +40,7 @@ class Dispatcher():
     def handle_template(self, file, template):
         if file.exists() and file.read_text().strip():
             # reading the text and stripping it rather than looking at byte size so spaces/NLs are ignored
-            print("Ignoring template because file already exists and is not empty.")
+            print(f"{Fore.YELLOW}Ignoring template because file already exists and is not empty.{Style.RESET_ALL}")
             return False
         else:
             templater = Templater()
@@ -58,6 +60,10 @@ class Dispatcher():
         full_path = base_path / file_path
         full_path.parent.mkdir(parents=True, exist_ok=True)
         return full_path
+
+    def configure_other_args(self):
+        parser_templates = self.subparsers.add_parser('templates', help="List all templates")
+        parser_templates.set_defaults(func=template.list_templates)
 
             
     def configure_log_args(self):

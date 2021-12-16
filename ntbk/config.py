@@ -23,7 +23,7 @@ def load_config():
         return yaml.load(file, Loader=yaml.FullLoader)
 
 def validate_config():
-    required_keys = ['ntbk_dir', 'editor']
+    required_keys = ['ntbk_dir', 'editor', 'template_dir']
     config = load_config()
     for key in required_keys:
         if key not in config or not config[key]:
