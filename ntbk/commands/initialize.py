@@ -4,10 +4,9 @@ import notebook
 
 def init_config_file():
     if not config.config_exists():
-        config.save_config({
-            'ntbk_dir': '',
-            'editor': ''
-            })
+        config.save_config(config.CONFIG_DEFAULTS)
+    else:
+        config.validate_config()
 
 def init_notebook():
     if not config.config_exists():
