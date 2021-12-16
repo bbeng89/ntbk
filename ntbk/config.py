@@ -15,8 +15,11 @@ CONFIG_DEFAULTS = {
     'editor': '',
     'default_filename': 'index',
     'template_dir': '_templates',
-    'default_log_template': '',
-    'default_collection_template': ''
+    'default_templates': {
+        'log': {
+            'index': 'log_default'
+        }
+    }
     }
 
 

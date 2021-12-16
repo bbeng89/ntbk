@@ -42,8 +42,9 @@ class Dispatcher():
         else:
             if args.template: # check for template arg first to override default
                 self.new_file_from_template(file, args.template)
-            elif 'default_log_template' in self.config and self.config['default_log_template']: # if no template arg, then check defaults
-                self.new_file_from_template(file, self.config['default_log_template'])
+            elif self.config.get('default_templates', {}).get('log', {}).get(file.stem, None): # if no template arg, then check defaults
+                template_file = f"{self.config['default_templates']['log'][file.stem]}.md"
+                self.new_file_from_template(file, template_file)
                 
             self.open_file_in_editor(file)
 
