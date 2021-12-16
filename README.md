@@ -14,7 +14,7 @@ I used to be a dedicated bullet journaler until I got tired of the limitations o
 
 ## Usage
 
-There are two types of files in nbtk - `logs` and `collections`. Logs are similar to the "daily log" in bullet journaling. They are just a page of text for the current day. Collections on the other hand contain related ideas and topics that don't belong to a particular day. For instance you might have a `recipes` collection or `books` collection. 
+There are two types of files in ntbk - `logs` and `collections`. Logs are similar to the "daily log" in bullet journaling. They are just a page of text for the current day. Collections on the other hand contain related ideas and topics that don't belong to a particular day. For instance you might have a `recipes` collection or `books` collection. 
 
 An ntbk directory will look like the following:
 
