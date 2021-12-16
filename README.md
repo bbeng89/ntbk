@@ -26,7 +26,8 @@ An ntbk directory will look like the following:
     ├─ collections/
     │  ├─ reading/
     │  │  ├─ 1984.md
-    │  ├─ recipes.md
+    │  ├─ recipes/
+    │  │  ├─ index.md
     ├─ log/
     │  ├─ 2021/
     │  │  ├─ 01-january/
