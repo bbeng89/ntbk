@@ -1,6 +1,12 @@
-import config
+# system imports
 from pathlib import Path
+
+# 3rd party imports
 from colorama import Fore, Style
+
+# app imports
+import config
+
 
 def list_templates(args):
     conf = config.load_config()

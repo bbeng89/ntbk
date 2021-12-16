@@ -1,4 +1,7 @@
+# 3rd party imports
 import colorama
+
+# app imports
 from dispatcher import Dispatcher
 
 dispatcher = Dispatcher()

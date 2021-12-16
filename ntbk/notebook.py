@@ -1,9 +1,14 @@
+# system imports
 from pathlib import Path
+
+# app imports
 from config import load_config
+
 
 def notebook_exists():
     conf = load_config()
     return Path(conf['ntbk_dir']).expanduser().exists()
+
 
 def create_notebook():
     conf = load_config()

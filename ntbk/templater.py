@@ -1,7 +1,13 @@
-import config
+# system imports
 from pathlib import Path
 from datetime import date, datetime
+
+# 3rd party imports
 from jinja2 import Environment, FileSystemLoader
+
+# app imports
+import config
+
 
 class Templater():
 

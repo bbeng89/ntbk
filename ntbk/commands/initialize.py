@@ -1,12 +1,17 @@
+# system imports
 import os
+
+# app imports
 import config
 import notebook
+
 
 def init_config_file():
     if not config.config_exists():
         config.save_config(config.CONFIG_DEFAULTS)
     else:
         config.validate_config()
+
 
 def init_notebook():
     if not config.config_exists():
@@ -24,6 +29,7 @@ def init_notebook():
     
     if not notebook.notebook_exists():
         notebook.create_notebook()
+
 
 def init_app():
     init_config_file()
