@@ -66,7 +66,7 @@ class Dispatcher():
         parser_tom.set_defaults(func=self.handle_logfile_command)
 
         parser_date = self.subparsers.add_parser('date', help="Load given date's log file")
-        parser_date.add_argument('date', type=self.valid_date)
+        parser_date.add_argument('date', type=self.valid_iso_date)
         parser_date.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_date.set_defaults(func=self.handle_logfile_command)
 
@@ -75,7 +75,8 @@ class Dispatcher():
         pass
 
 
-    def valid_date(self, s):
+    def valid_iso_date(self, s):
+        """Validator used by argparse to make sure given dates are in ISO format"""
         try:
             return date.fromisoformat(s)
         except ValueError:
