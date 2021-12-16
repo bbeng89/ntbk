@@ -38,12 +38,15 @@ class Dispatcher():
         d = args.date if args.command == 'date' else args.command
         file = self.get_full_path(logfile.get_logfile(d, args.file))
 
-        if args.template: # check for template arg first to override default
-            self.new_file_from_template(file, args.template)
-        elif 'default_log_template' in self.config and self.config['default_log_template']: # if no template arg, then check defaults
-            self.new_file_from_template(file, self.config['default_log_template'])
-            
-        self.open_file_in_editor(file)
+        if args.list:
+            logfile.list_files_for_day(file.parent)
+        else:
+            if args.template: # check for template arg first to override default
+                self.new_file_from_template(file, args.template)
+            elif 'default_log_template' in self.config and self.config['default_log_template']: # if no template arg, then check defaults
+                self.new_file_from_template(file, self.config['default_log_template'])
+                
+            self.open_file_in_editor(file)
 
     def handle_collection_command(self, args):
         file = self.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
@@ -82,19 +85,23 @@ class Dispatcher():
     def configure_log_args(self):
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_today.add_argument('--list', '-l', action='store_true', help="List today's files")
         parser_today.set_defaults(func=self.handle_logfile_command)
 
         parser_yest = self.subparsers.add_parser('yesterday', help="Load yesterday's log file")
         parser_yest.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_yest.add_argument('--list', '-l', action='store_true', help="List yesterday's files")
         parser_yest.set_defaults(func=self.handle_logfile_command)
 
         parser_tom = self.subparsers.add_parser('tomorrow', help="Load tomorrow's log file")
         parser_tom.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_tom.add_argument('--list', '-l', action='store_true', help="List tomorrow's files")
         parser_tom.set_defaults(func=self.handle_logfile_command)
 
         parser_date = self.subparsers.add_parser('date', help="Load given date's log file")
         parser_date.add_argument('date', type=self.valid_iso_date)
         parser_date.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_date.add_argument('--list', '-l', action='store_true', help="List given date's files")
         parser_date.set_defaults(func=self.handle_logfile_command)
 
     def configure_collection_args(self):

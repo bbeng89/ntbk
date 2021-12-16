@@ -33,3 +33,15 @@ def get_logfile(date, file):
         return tomorrow(file)
 
     return specific_date(date, file)
+
+
+def get_files_for_day(day_path):
+    files = []
+    for child in day_path.glob('*.*'):
+        files.append(child)
+    return files
+
+
+def list_files_for_day(day_path):
+    for f in get_files_for_day(day_path):
+        print(f.relative_to(day_path))
