@@ -4,7 +4,7 @@ A simple terminal notebook application based loosely around the ideas of bullet 
 
 ## Why does this exist?
 
-I used to be a dedicated bullet journaler until I got tired of the limitations of writing things by hand. I offloaded my todo list to Todoist and scheduling needs to the calendar provided by my email host. This worked much better as I always have my phone on me, but I didn't always have my journal, so now I never missed a thought or idea. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. I tried apps like Joplin but I just wanted to be in the terminal with Vim and nothing else. I then tried just vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays "page" and quickly opening collections. That's where NTBK came in. 
+I used to be a dedicated bullet journaler until I got tired of the limitations of writing things by hand. I offloaded my todo list to Todoist and scheduling needs to the calendar provided by my email host. This works much better as I always have my phone on me, but I didn't always have my journal. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. This is something I don't typically do "on the go" and instead prefer to type in vim as it's much faster and less limiting than pen and paper. I tried apps like Joplin but I really just wanted to be in the terminal with Vim and nothing else. I then tried just vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays "page" and quickly opening collections. That's where NTBK came in. 
 
 ### Philosophy
 
