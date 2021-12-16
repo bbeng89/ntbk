@@ -22,7 +22,6 @@ class Dispatcher():
         # setup base argparser
         self.config = config.load_config()
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
-        self.parser.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         # setup subparsers
@@ -85,22 +84,26 @@ class Dispatcher():
     def configure_log_args(self):
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_today.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_today.add_argument('--list', '-l', action='store_true', help="List today's files")
         parser_today.set_defaults(func=self.handle_logfile_command)
 
         parser_yest = self.subparsers.add_parser('yesterday', help="Load yesterday's log file")
         parser_yest.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_yest.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_yest.add_argument('--list', '-l', action='store_true', help="List yesterday's files")
         parser_yest.set_defaults(func=self.handle_logfile_command)
 
         parser_tom = self.subparsers.add_parser('tomorrow', help="Load tomorrow's log file")
         parser_tom.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_tom.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_tom.add_argument('--list', '-l', action='store_true', help="List tomorrow's files")
         parser_tom.set_defaults(func=self.handle_logfile_command)
 
         parser_date = self.subparsers.add_parser('date', help="Load given date's log file")
         parser_date.add_argument('date', type=self.valid_iso_date)
         parser_date.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_date.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_date.add_argument('--list', '-l', action='store_true', help="List given date's files")
         parser_date.set_defaults(func=self.handle_logfile_command)
 
@@ -108,6 +111,7 @@ class Dispatcher():
         parser_collection = self.subparsers.add_parser('collection', help="Load given collection")
         parser_collection.add_argument('collection_name')
         parser_collection.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_collection.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_collection.add_argument('--list', '-l', action='store_true', help='List the files in given collection')
         parser_collection.set_defaults(func=self.handle_collection_command)
 

@@ -1,6 +1,6 @@
 # NTBK
 
-A simple terminal notebook application based loosely around the ideas of bullet journaling. 
+A simple, opinionated terminal notebook based loosely around the ideas of bullet journaling. 
 
 ## Why does this exist?
 
@@ -83,6 +83,44 @@ Note that in all of these commands the `index.md` file is implied, unless you sp
 
 *Note - the filename `index.md` can be changed with the `default_filename` variable in `~/.config/ntbk/ntbk.yml`*
 
+To list all the files for a given date use the `--list` flag
+
+```
+$ ntbk today --list
+```
+
+```
+$ ntbk date 2021-12-14 --list
+```
+
+### Collections
+
+Collections function very similarly to logs. To open/create a collection you use the `collection` command:
+
+```
+$ ntbk collection books
+```
+This would create the file `collections/books/index.md`
+
+If you want to create a new file inside a collection, just pass it as another argument.
+
+```
+$ ntbk collection books 1984
+```
+Would create `collections/books/1984.md`
+
+To list all your collections:
+
+```
+$ ntbk collections
+```
+
+To list all the files within a collection
+
+```
+$ ntbk collection books --list
+```
+
 ### Templates
 
 #### Writing Templates
@@ -120,10 +158,16 @@ Thursday, December 16, 2021 01:18 PM
 You can specify a template to be used with the `--template` or `-t` argument.
 
 ```
-$ ntbk --template diary.md today diary
+$ ntbk today diary --template diary.md
 ```
 
 This will create the `diary.md` file for today using the `_templates/diary.md` template.
+
+Collections can also use templates.
+
+```
+$ ntbk collection recipes meatloaf --template recipe.md
+```
 
 To see a list of templates available use the `templates` command
 
