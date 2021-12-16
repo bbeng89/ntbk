@@ -10,7 +10,7 @@ from colorama import Fore, Style
 # app imports
 import config
 from templater import Templater
-from commands import initialize, logfile, template
+from commands import initialize, logfile, template, collection
 
 
 class Dispatcher():
@@ -43,6 +43,16 @@ class Dispatcher():
         elif 'default_log_template' in self.config and self.config['default_log_template']: # if no template arg, then check defaults
             self.handle_template(file, self.config['default_log_template'])
             
+        self.open_file_in_editor(file)
+
+    def handle_collection_command(self, args):
+        file = self.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
+
+        if args.template: # check for template arg first to override default
+            self.handle_template(file, args.template)
+        elif 'default_collection_template' in self.config and self.config['default_collection_template']: # if no template arg, then check defaults
+            self.handle_template(file, self.config['default_collection_template'])
+        
         self.open_file_in_editor(file)
 
     def handle_template(self, file, template):
@@ -85,7 +95,10 @@ class Dispatcher():
         parser_date.set_defaults(func=self.handle_logfile_command)
 
     def configure_collection_args(self):
-        pass
+        parser = self.subparsers.add_parser('collection', help="Load given collection")
+        parser.add_argument('collection_name')
+        parser.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser.set_defaults(func=self.handle_collection_command)
 
     def configure_other_args(self):
         parser_templates = self.subparsers.add_parser('templates', help="List all templates")
