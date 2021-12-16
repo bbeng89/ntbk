@@ -8,7 +8,7 @@ def notebook_exists():
 def create_notebook():
     conf = load_config()
     notebook_path = Path(conf['ntbk_dir']).expanduser()
-    subfolders = ['collections', 'log']
+    subfolders = ['_templates', 'collections', 'log']
     notebook_path.mkdir(parents=True, exist_ok=True)
 
     for sub in subfolders:

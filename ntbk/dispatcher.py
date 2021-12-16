@@ -12,6 +12,7 @@ class Dispatcher():
         initialize.init_app()
         self.config = config.load_config()
         self.parser = argparse.ArgumentParser(prog='ntbk', description='a terminal notebook application')
+        self.parser.add_argument('--template', '-t', help='If creating, this template file will be used')
         self.subparsers = self.parser.add_subparsers(dest='command')
         self.configure_log_args()
         self.configure_collection_args()
