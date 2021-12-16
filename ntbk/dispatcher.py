@@ -12,7 +12,7 @@ class Dispatcher():
         initialize.init_app()
         self.config = config.load_config()
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
-        self.parser.add_argument('--template', '-t', help='If creating, this template file will be used')
+        self.parser.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         self.subparsers = self.parser.add_subparsers(dest='command')
         self.configure_log_args()
         self.configure_collection_args()
@@ -27,15 +27,23 @@ class Dispatcher():
         d = args.date if args.command == 'date' else args.command
         file = self.get_full_path(logfile.get_logfile(d, args.file))
 
-        if args.template:
-            if file.exists() and file.read_text().strip():
-                # reading the text and stripping it rather than looking at byte size so spaces/NLs are ignored
-                print("Ignoring template because file already exists and is not empty.")
-            else:
-                templater = Templater()
-                templater.create_file_from_template(args.template, str(file))
-
+        if args.template: # check for template arg first to override default
+            self.handle_template(file, args.template)
+        elif 'default_log_template' in self.config and self.config['default_log_template']: # if no template arg, then check defaults
+            self.handle_template(file, self.config['default_log_template'])
+            
         self.open_file_in_editor(file)
+
+
+    def handle_template(self, file, template):
+        if file.exists() and file.read_text().strip():
+            # reading the text and stripping it rather than looking at byte size so spaces/NLs are ignored
+            print("Ignoring template because file already exists and is not empty.")
+            return False
+        else:
+            templater = Templater()
+            templater.create_file_from_template(template, str(file))
+            return True
 
 
     def open_file_in_editor(self, path):
