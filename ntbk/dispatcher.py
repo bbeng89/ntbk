@@ -48,12 +48,15 @@ class Dispatcher():
     def handle_collection_command(self, args):
         file = self.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
 
-        if args.template: # check for template arg first to override default
-            self.new_file_from_template(file, args.template)
-        elif 'default_collection_template' in self.config and self.config['default_collection_template']: # if no template arg, then check defaults
-            self.new_file_from_template(file, self.config['default_collection_template'])
-        
-        self.open_file_in_editor(file)
+        if args.list:
+            collection.list_files_in_collection(file.parent)
+        else:
+            if args.template: # check for template arg first to override default
+                self.new_file_from_template(file, args.template)
+            elif 'default_collection_template' in self.config and self.config['default_collection_template']: # if no template arg, then check defaults
+                self.new_file_from_template(file, self.config['default_collection_template'])
+            
+            self.open_file_in_editor(file)
 
     def new_file_from_template(self, file, template):
         if file.exists() and file.read_text().strip():
@@ -98,6 +101,7 @@ class Dispatcher():
         parser_collection = self.subparsers.add_parser('collection', help="Load given collection")
         parser_collection.add_argument('collection_name')
         parser_collection.add_argument('file', nargs='?', default=self.config['default_filename'])
+        parser_collection.add_argument('--list', '-l', action='store_true', help='List the files in given collection')
         parser_collection.set_defaults(func=self.handle_collection_command)
 
         parser_collections = self.subparsers.add_parser('collections', help="List all collections")

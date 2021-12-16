@@ -10,11 +10,13 @@ import config
 def filepath_for_collection(collection, file):
     return f'collections/{collection}/{file}.md'
 
+
 def get_files_in_collection(collection_path):
     files = []
     for child in collection_path.glob('*.*'):
         files.append(child)
     return files
+
 
 def list_collections(args):
     conf = config.load_config()
@@ -26,3 +28,7 @@ def list_collections(args):
         color = Fore.BLUE if len(files) == 1 else Fore.GREEN
         print(f'{child.relative_to(collection_dir)} {color}[{countstr}]{Style.RESET_ALL}')
 
+
+def list_files_in_collection(collection_path):
+    for f in get_files_in_collection(collection_path):
+        print(f.relative_to(collection_path))
