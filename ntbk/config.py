@@ -7,7 +7,8 @@ APP_CONFIG = {
 CONFIG_DEFAULTS = {
     'ntbk_dir': '',
     'editor': '',
-    'default_filename': 'index'
+    'default_filename': 'index',
+    'template_dir': '_templates'
     }
 
 _config_path = Path(APP_CONFIG['config_filepath']).expanduser()
