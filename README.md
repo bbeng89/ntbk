@@ -2,7 +2,6 @@
 <img src="https://user-images.githubusercontent.com/356577/146586531-01bbc413-a876-4c7b-a0a5-889b99558e19.png" />
 </p>
 
----
 
 A simple, opinionated terminal notebook based loosely around the ideas of bullet journaling. 
 
