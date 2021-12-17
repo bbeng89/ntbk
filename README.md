@@ -1,4 +1,6 @@
-![ntbk-logo](https://user-images.githubusercontent.com/356577/146585899-fc3480c9-281f-46bf-bd73-b129c648a2a1.png)
+<p align="center">
+<img src="https://user-images.githubusercontent.com/356577/146585899-fc3480c9-281f-46bf-bd73-b129c648a2a1.png" />
+</p>
 
 ---
 
