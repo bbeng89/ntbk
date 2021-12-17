@@ -34,17 +34,20 @@ class Dispatcher():
         args.func(args)
 
     def handle_logfile_command(self, args):
-        d = args.date if args.command == 'date' else args.command
-        file = self.get_full_path(logfile.get_logfile(d, args.file))
+        dt = logfile.get_date(args.date if args.command == 'date' else args.command)
+        file = self.get_full_path(logfile.filepath_for_date(dt, args.file))
+
+        # Logfiles get an extra template variable - log_date. This is the date of the log file (not necessarily TODAY)
+        extra_vars = { 'log_date': dt }
 
         if args.list:
             logfile.list_files_for_day(file.parent)
         else:
             if args.template: # check for template arg first to override default
-                self.new_file_from_template(file, args.template, args.vars)
+                self.new_file_from_template(file, args.template, args.vars, extra_vars)
             elif self.config.get('default_templates', {}).get('log', {}).get(file.stem, None): # if no template arg, then check defaults
                 template_file = f"{self.config['default_templates']['log'][file.stem]}.md"
-                self.new_file_from_template(file, template_file, args.vars)
+                self.new_file_from_template(file, template_file, args.vars, extra_vars)
                 
             self.open_file_in_editor(file)
 
@@ -62,15 +65,15 @@ class Dispatcher():
             
             self.open_file_in_editor(file)
 
-    def new_file_from_template(self, file, template, extra_vars=[]):
+    def new_file_from_template(self, file, template, var_args=[], extra_vars={}):
         if file.exists() and file.read_text().strip():
             # reading the text and stripping it rather than looking at byte size so spaces/NLs are ignored
-            print(f"{Fore.YELLOW}Ignoring template because file already exists and is not empty.{Style.RESET_ALL}")
+            #print(f"{Fore.YELLOW}Ignoring template because file already exists and is not empty.{Style.RESET_ALL}")
             return False
         else:
             templater = Templater()
-            extra_var_dict = templater.convert_key_value_vars_to_dict(extra_vars)
-            templater.create_file_from_template(template, str(file), extra_var_dict)
+            extra_vars.update(templater.convert_key_value_vars_to_dict(var_args))
+            templater.create_file_from_template(template, str(file), extra_vars)
             return True
 
     def open_file_in_editor(self, path):
@@ -89,21 +92,21 @@ class Dispatcher():
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_today.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
-        parser_today.add_argument("--vars", metavar="KEY=VALUE", nargs='+', help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
+        parser_today.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_today.add_argument('--list', '-l', action='store_true', help="List today's files")
         parser_today.set_defaults(func=self.handle_logfile_command)
 
         parser_yest = self.subparsers.add_parser('yesterday', help="Load yesterday's log file")
         parser_yest.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_yest.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
-        parser_yest.add_argument("--vars", metavar="KEY=VALUE", nargs='+', help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
+        parser_yest.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_yest.add_argument('--list', '-l', action='store_true', help="List yesterday's files")
         parser_yest.set_defaults(func=self.handle_logfile_command)
 
         parser_tom = self.subparsers.add_parser('tomorrow', help="Load tomorrow's log file")
         parser_tom.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_tom.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
-        parser_tom.add_argument("--vars", metavar="KEY=VALUE", nargs='+', help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
+        parser_tom.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_tom.add_argument('--list', '-l', action='store_true', help="List tomorrow's files")
         parser_tom.set_defaults(func=self.handle_logfile_command)
 
@@ -111,7 +114,7 @@ class Dispatcher():
         parser_date.add_argument('date', type=self.valid_iso_date)
         parser_date.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_date.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
-        parser_date.add_argument("--vars", metavar="KEY=VALUE", nargs='+', help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
+        parser_date.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_date.add_argument('--list', '-l', action='store_true', help="List given date's files")
         parser_date.set_defaults(func=self.handle_logfile_command)
 
@@ -120,7 +123,7 @@ class Dispatcher():
         parser_collection.add_argument('collection_name')
         parser_collection.add_argument('file', nargs='?', default=self.config['default_filename'])
         parser_collection.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
-        parser_collection.add_argument("--vars", metavar="KEY=VALUE", nargs='+', help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
+        parser_collection.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_collection.add_argument('--list', '-l', action='store_true', help='List the files in given collection')
         parser_collection.set_defaults(func=self.handle_collection_command)
 

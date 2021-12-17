@@ -6,34 +6,16 @@ def filepath_for_date(dt, file):
     return f"log/{dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}/{file}.md"
 
 
-def today(file):
-    return filepath_for_date(date.today(), file)
+def get_date(date_arg):
+    if date_arg == 'today':
+        return date.today()
+    elif date_arg == 'yesterday':
+        return date.today() - timedelta(days=1)
+    elif date_arg == 'tomorrow':
+        return date.today() + timedelta(days=1)
 
-
-def yesterday(file):
-    yesterday = date.today() - timedelta(days=1)
-    return filepath_for_date(yesterday, file)
-
-
-def tomorrow(file):
-    tomorrow = date.today() + timedelta(days=1)
-    return filepath_for_date(tomorrow, file)
-
-
-def specific_date(date, file):
-    return filepath_for_date(date, file)
+    return date_arg #should be a date instance
     
-
-def get_logfile(date, file):
-    if date == 'today':
-        return today(file)
-    elif date == 'yesterday':
-        return yesterday(file)
-    elif date == 'tomorrow':
-        return tomorrow(file)
-
-    return specific_date(date, file)
-
 
 def get_files_for_day(day_path):
     files = []

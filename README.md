@@ -128,7 +128,9 @@ $ ntbk collection books --list
 
 The third directory in the `ntbk/` folder is `_templates`. Here you can create markdown files that will be used as a starting point for new files. Templates use the [Jinja2](https://jinja2docs.readthedocs.io/en/stable/templates.html) templating library, so all functions provided by jinja are available. 
 
-By default there are only a few variables provided to the templates. They are: `now`, `today_iso`, `now_iso`, `today_long`, and `now_long`.
+By default there are only a few variables provided to the templates. They are: `now`, `today_iso`, `now_iso`, `today_long`, and `now_long`. Log files get an additional variable `log_date` which is the file's date. 
+
+Additional variables can be provided in the config file and also with the `--vars` flag, which will be covered in a later section.
 
 Given this template:
 
@@ -210,6 +212,32 @@ Would use the `book_review.md` template
 $ ntbk collection recipes
 ```
 Would create an `index.md` file and use the `recipe.md` template.
+
+#### Providing Additional Variables
+
+If you have variables you want to be available to every template you can define them in the `template_vars` setting in `~/.config/ntbk/ntbk.yml`. You can provide any kind of data you like here. 
+
+```
+template_vars:
+  owner: John Doe
+  diary_tags:
+    - diary
+    - 2021
+```
+
+This would translate to a dict that can be used in your templates.
+
+```
+# Diary Entry
+Author: {{ owner }}
+Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
+```
+
+You can also provide additional variables with the `--vars` flag. These variables can only be simple strings in the format of `key=value`. You can provide as many as you like. Any values that contain spaces should be enclosed in quotes.
+
+```
+$ ntbk collection books dune --template book_review.md --vars title=Dune author="Frank Herbert"
+```
 
 ---
 
