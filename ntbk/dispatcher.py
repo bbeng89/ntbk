@@ -142,7 +142,7 @@ class Dispatcher():
 
         parser_jot = self.subparsers.add_parser('jot', help="Add a quick note to today's log without opening your editor")
         parser_jot.add_argument('text')
-        parser_jot.add_argument('--file', '-f', default=self.config['default_filename'], help="Jot to file other than the default")
+        parser_jot.add_argument('file', nargs='?', default=self.config['default_filename'], help="Jot to file other than the default")
         parser_jot.add_argument('--timestamp', '-s', action='store_true', help="Add a timestamp before the jotted note")
         parser_jot.set_defaults(func=self.handle_jot_command)
 

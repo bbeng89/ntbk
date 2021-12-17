@@ -105,11 +105,12 @@ $ ntbk jot "some quick note"
 
 This will append the text "some quick note" to the end of today's `index.md` file.
 
-If you'd like to jot to a different file you can use the `--file` or `-f` flag.
+If you'd like to jot to a different file you can specify the file after your note.
 
 ```
-$ ntbk jot "some quick note" -f notes
+$ ntbk jot "some quick note" notes
 ```
+This would add the text "some quick note" to today's `notes.md` file.
 
 To automatically add the current time before your jotted note use the `--timestamp` or `-s` flag.
 
