@@ -15,6 +15,7 @@ class Templater():
         self.config = config.load_config()
         self.template_path = Path(self.config['ntbk_dir']).expanduser() / '_templates'
         self.env = Environment(loader=FileSystemLoader(str(self.template_path)))
+    
 
     def get_variables(self):
         now = datetime.now()
@@ -40,3 +41,16 @@ class Templater():
         out_path = Path(output_file)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(file_content)
+
+    def convert_key_value_vars_to_dict(self, var_list):
+        """ Takes a list like ['foo=bar', 'bar=baz'] and converts it to {'foo': 'bar', 'bar': 'baz'} """
+        vars = {}
+        for var in var_list:
+            key, value = self._parse_key_val_var(var)
+            vars[key] = value
+        return vars
+
+    def _parse_key_val_var(self, var_str):
+        """Takes a string in the format foo=bar and converts it to a tuple ('foo', 'bar')"""
+        items = var_str.split('=')
+        return (items[0].strip(), items[1].strip())
