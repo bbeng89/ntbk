@@ -10,7 +10,7 @@ from colorama import Fore, Style
 # app imports
 import config
 from templater import Templater
-from commands import initialize, logfile, template, collection
+from commands import initialize, logfile, template, collection, jot
 
 
 class Dispatcher():
@@ -64,6 +64,12 @@ class Dispatcher():
                 self.new_file_from_template(file, template_file, args.vars)
             
             self.open_file_in_editor(file)
+
+    def handle_jot_command(self, args):
+        dt = logfile.get_date('today')
+        file = self.get_full_path(logfile.filepath_for_date(dt, args.file))
+        jot.jot_note(args.text, file, args.timestamp)
+
 
     def new_file_from_template(self, file, template, var_args=[], extra_vars={}):
         if file.exists() and file.read_text().strip():
@@ -133,6 +139,12 @@ class Dispatcher():
     def configure_other_args(self):
         parser_templates = self.subparsers.add_parser('templates', help="List all templates")
         parser_templates.set_defaults(func=template.list_templates)
+
+        parser_jot = self.subparsers.add_parser('jot', help="Add a quick note to today's log without opening your editor")
+        parser_jot.add_argument('text')
+        parser_jot.add_argument('--file', '-f', default=self.config['default_filename'], help="Jot to file other than the default")
+        parser_jot.add_argument('--timestamp', '-s', action='store_true', help="Add a timestamp before the jotted note")
+        parser_jot.set_defaults(func=self.handle_jot_command)
 
     def valid_iso_date(self, s):
         """Validator used by argparse to make sure given dates are in ISO format"""
