@@ -19,4 +19,8 @@ def create_notebook():
     for sub in subfolders:
         (notebook_path / sub).mkdir(exist_ok=True)
     
+    # create a basic template for new log entries
+    default_log_template = notebook_path / conf['template_dir'] / 'log_default.md'
+    default_log_template.write_text('# {{ today_long }}')
+    
     print(f'Created notebook at {notebook_path}')

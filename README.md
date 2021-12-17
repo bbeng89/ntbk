@@ -179,9 +179,39 @@ $ ntbk templates
 You can also set a default template to be used for log entries and collections in your `~/.config/ntbk/ntbk.yml` file:
 
 ```
-default_log_template: daily-log-default.md
-default_collection_template: default-collection.md
+default_templates:
+  log:
+    index: log_default
+    work: work_notes
+  collection:
+    books: book_review
+    recipes: recipe
 ```
+The `log` section defines the template to use for each type of log file. 
+
+```
+$ ntbk today
+```
+Would use the `log_default.md` template (note the .md extension is implicit in the config).
+
+```
+$ ntbk today work
+```
+Would use the `work_notes.md` template
+
+For collections you can only specify a single template to be used by every file in the collection.
+
+```
+$ ntbk collection books 1984
+```
+Would use the `book_review.md` template
+
+```
+$ ntbk collection recipes
+```
+Would create an `index.md` file and use the `recipe.md` template.
+
+---
 
 If you have a default configured, but also use the `--template` argument, the default will be overridden. 
 
