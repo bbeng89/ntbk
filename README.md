@@ -1,9 +1,11 @@
 <p align="center">
 <img src="https://user-images.githubusercontent.com/356577/146586531-01bbc413-a876-4c7b-a0a5-889b99558e19.png" />
 </p>
-
-
+<p align="center">
 A simple, opinionated terminal notebook inspired by bullet journaling. 
+</p>
+
+# Contents
 
 * [Why does this exist?](#why-does-this-exist)
 * [Project philosophy](#project-philosophy)
