@@ -95,6 +95,28 @@ $ ntbk today --list
 $ ntbk date 2021-12-14 --list
 ```
 
+### Jotting notes
+
+Sometimes you just want to make a quick note without having to open your editor. To do this you can use the `jot` command. This command will only write to today's log.
+
+```
+$ ntbk jot "some quick note"
+```
+
+This will append the text "some quick note" to the end of today's `index.md` file.
+
+If you'd like to jot to a different file you can use the `--file` or `-f` flag.
+
+```
+$ ntbk jot "some quick note" -f notes
+```
+
+To automatically add the current time before your jotted note use the `--timestamp` or `-s` flag.
+
+```
+$ ntbk jot "some note" --timestamp
+```
+
 ### Opening collections
 
 Collections function very similarly to logs. To open/create a collection you use the `collection` command:
