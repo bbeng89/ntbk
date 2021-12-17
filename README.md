@@ -55,6 +55,11 @@ $ ntbk today
 ```
  This will open the file `log/2021/12-december/2021-12-16/index.md`. The file will be created if it doesn't already exist.
 
+ Simply running the script without any arguments is the same as using the today command, however, you cannot add any additional arguments like `--template` or specify a different file (covered later). It's simply a shortcut to open today's index file.
+ ```
+ $ ntbk
+ ```
+
 If you want to open a different file than `index.md` you can specify it as another parameter.
 
 ```

@@ -22,6 +22,8 @@ class Dispatcher():
         # setup base argparser
         self.config = config.load_config()
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
+        # set all these defaults so that it will run without any args. This will default to the "today" command
+        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config['default_filename'], list=False, template=None, vars=[])
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         # setup subparsers
@@ -34,7 +36,10 @@ class Dispatcher():
         args.func(args)
 
     def handle_logfile_command(self, args):
-        dt = logfile.get_date(args.date if args.command == 'date' else args.command)
+        if args.command == None:
+            dt = logfile.get_date('today')
+        else:
+            dt = logfile.get_date(args.date if args.command == 'date' else args.command)
         file = self.get_full_path(logfile.filepath_for_date(dt, args.file))
 
         # Logfiles get an extra template variable - log_date. This is the date of the log file (not necessarily TODAY)
