@@ -3,7 +3,7 @@
 </p>
 
 
-A simple, opinionated terminal notebook based loosely around the ideas of bullet journaling. 
+A simple, opinionated terminal notebook inspired by bullet journaling. 
 
 * [Why does this exist?](#why-does-this-exist)
 * [Project philosophy](#project-philosophy)
