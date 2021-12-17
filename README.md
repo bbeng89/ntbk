@@ -2,6 +2,24 @@
 
 A simple, opinionated terminal notebook based loosely around the ideas of bullet journaling. 
 
+* [Why does this exist?](#why-does-this-exist)
+* [Philosophy](#philosophy)
+* [File structure](#file-structure)
+* [Usage](#usage)
+    * [Opening today's log](#opening-todays-log)
+    * [Opening logs for other days](#opening-logs-for-other-days)
+    * [Listing log files](#listing-log-files)
+    * [Jotting notes](#jotting-notes)
+    * [Opening collections](#opening-collections)
+    * [Listing collections](#listing-collections)
+    * [Writing templates](#writing-templates)
+    * [Using templates](#using-templates)
+    * [Listing available templates](#listing-available-templates)
+    * [Default templates](#default-templates)
+    * [Providing additional template variables in config](#providing-additional-template-variables-in-config)
+    * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with-vars-flag)
+* [Config](#config)
+
 ## Why does this exist?
 
 I used to be a dedicated bullet journaler until I got tired of the limitations of writing things by hand and needing to carry a notebook everywhere. I offloaded my todo list to Todoist and scheduling to the calendar provided by my email host. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. This is something I don't typically do "on the go" and instead prefer to type in vim as it's much faster and less limiting than pen and paper. I tried apps like Joplin but I really just wanted to be in the terminal with Vim and nothing else. I then tried just vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays log and quickly opening collections. That's where NTBK came in. 
@@ -12,7 +30,7 @@ I used to be a dedicated bullet journaler until I got tired of the limitations o
 - No databases. Only work with the filesystem.
 - It should be easy to navigate the generated file tree without ntbk. Ntbk only provides shortcuts.
 
-## File Structure
+## File structure
 
 There are two main entities in ntbk - `logs` and `collections`. Logs are similar to the "daily log" in bullet journaling. They contain text for the current day. Collections on the other hand contain related ideas and topics that don't belong to a particular day. For instance you might have a `recipes` collection or `books` collection. 
 
@@ -252,7 +270,7 @@ If you have a default configured, but also use the `--template` argument, the de
 
 *Note - templates will only be used if the file you're opening doesn't exist or is empty. It will not overwrite existing files with the template content*
 
-### Providing additional variables in config
+### Providing additional template variables in config
 
 If you have variables you want to be available to every template you can define them in the `template_vars` setting in `~/.config/ntbk/ntbk.yml`. You can provide any kind of data you like here. 
 
@@ -272,7 +290,7 @@ Author: {{ owner }}
 Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
 ```
 
-### Providing additional variables with --vars flag
+### Providing additional template variables with --vars flag
 
 You can also provide additional variables at runtime with the `--vars` flag. These variables can only be simple strings in the format of `key=value`. You can provide as many as you like. Any values that contain spaces should be enclosed in quotes.
 
