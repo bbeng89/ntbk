@@ -3,8 +3,8 @@
 A simple, opinionated terminal notebook based loosely around the ideas of bullet journaling. 
 
 * [Why does this exist?](#why-does-this-exist)
-* [Philosophy](#philosophy)
-* [File structure](#file-structure)
+* [Project philosophy](#project-philosophy)
+* [Folder structure](#folder-structure)
 * [Usage](#usage)
     * [Opening today's log](#opening-todays-log)
     * [Opening logs for other days](#opening-logs-for-other-days)
@@ -17,20 +17,21 @@ A simple, opinionated terminal notebook based loosely around the ideas of bullet
     * [Listing available templates](#listing-available-templates)
     * [Default templates](#default-templates)
     * [Providing additional template variables in config](#providing-additional-template-variables-in-config)
-    * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with-vars-flag)
+    * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
 * [Config](#config)
 
 ## Why does this exist?
 
-I used to be a dedicated bullet journaler until I got tired of the limitations of writing things by hand and needing to carry a notebook everywhere. I offloaded my todo list to Todoist and scheduling to the calendar provided by my email host. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. This is something I don't typically do "on the go" and instead prefer to type in vim as it's much faster and less limiting than pen and paper. I tried apps like Joplin but I really just wanted to be in the terminal with Vim and nothing else. I then tried just vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays log and quickly opening collections. That's where NTBK came in. 
+I used to be a dedicated bullet journaler until I got tired of the problem of not always having my notebook, and the general limitations of writing things by hand. I offloaded my todo list to Todoist and scheduling to the calendar provided by my email host. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. I tried apps like Joplin but I really just wanted to be in the terminal with Vim and nothing else. I was using Vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays log and quickly opening collections. That's where ntbk came in. 
 
-## Philosophy
+## Project philosophy
 
-- Don't reinvent the wheel. Functions like todo lists and scheduling are handled better by other apps. Versioning and backup can be done by Dropbox, git, etc. It's up to the user and outside the scope of this project.
+- Don't reinvent the wheel. Functions like todo lists and scheduling are handled better by other apps. Versioning and backup can be done by Dropbox and git. Searching can be handled by grep. These tasks are up to the user and outside the scope of this project. ntbk only provides shortcuts to working within its opinionated structure.
+- It should be easy to navigate the generated file tree without ntbk.
 - No databases. Only work with the filesystem.
-- It should be easy to navigate the generated file tree without ntbk. Ntbk only provides shortcuts.
 
-## File structure
+
+## Folder structure
 
 There are two main entities in ntbk - `logs` and `collections`. Logs are similar to the "daily log" in bullet journaling. They contain text for the current day. Collections on the other hand contain related ideas and topics that don't belong to a particular day. For instance you might have a `recipes` collection or `books` collection. 
 
@@ -68,120 +69,146 @@ In the following examples it will be assumed today's date is 2021-12-16.
 
 To open today's log file you can use the `today` command.
 
+```console
+foo@bar:~$ ntbk today
 ```
-$ ntbk today
-```
+
  This will open the file `log/2021/12-december/2021-12-16/index.md`. The file will be created if it doesn't already exist.
 
  Simply running the script without any arguments is the same as using the today command, however, you cannot add any additional arguments like `--template` or specify a different file (covered later). It's simply a shortcut to open today's index file.
- ```
- $ ntbk
+ 
+ ```console
+ foo@bar:~$ ntbk
  ```
 
 If you want to open a different file than `index.md` you can specify it as another parameter.
 
+```console
+foo@bar:~$ ntbk today work
 ```
-$ ntbk today work
-```
+
 Would open/create `log/2021/12-december/2021-12-16/work.md`
 
 ### Opening logs for other days
 
+```console
+foo@bar:~$ ntbk yesterday
 ```
-$ ntbk yesterday
-```
+
 Would open/create `log/2021/12-december/2021-12-15/index.md`
 
+```console
+foo@bar:~$ ntbk tomorrow work
 ```
-$ ntbk tomorrow work
-```
+
 Would open/create `log/2021/12-december/2021-12-17/work.md`
 
+```console
+foo@bar:~$ ntbk date 2021-12-01
 ```
-$ ntbk date 2021-12-01
-```
+
 Would open/create `log/2021/12-december/2021-12-01/index.md`
 
 Note that in all of these commands the `index.md` file is implied, unless you specify a different file name.
 
-*Note - the filename `index.md` can be changed with the `default_filename` variable in `~/.config/ntbk/ntbk.yml`*
+*Note - the filename `index.md` can be changed with the `default_filename` [config](#config) variable.*
 
 ### Listing log files
 
 To list all the files for a given date use the `--list` flag
 
-```
-$ ntbk today --list
+```console
+foo@bar:~$ ntbk today --list
+work.md
+index.md
+notes.md
 ```
 
-```
-$ ntbk date 2021-12-14 --list
+```console
+foo@bar:~$ ntbk date 2021-12-14 --list
+index.md
 ```
 
 ### Jotting notes
 
 Sometimes you just want to make a quick note without having to open your editor. To do this you can use the `jot` command. This command will only write to today's log.
 
+```console
+foo@bar:~$ ntbk jot "some quick note"
+Jotted note to today's index.md file
 ```
-$ ntbk jot "some quick note"
-```
-
-This will append the text "some quick note" to the end of today's `index.md` file.
 
 If you'd like to jot to a different file you can specify the file after your note.
 
+```console
+foo@bar:~$ ntbk jot "some quick note" notes
+Jotted note to today's notes.md file
 ```
-$ ntbk jot "some quick note" notes
-```
-This would add the text "some quick note" to today's `notes.md` file.
 
 To automatically add the current time before your jotted note use the `--timestamp` or `-s` flag.
 
-```
-$ ntbk jot "some note" --timestamp
+```console
+foo@bar:~$ ntbk jot "some note" --timestamp
+Jotted note to today's index.md file
 ```
 
 ### Opening collections
 
 Collections function very similarly to logs. To open/create a collection you use the `collection` command:
 
+```console
+foo@bar:~$ ntbk collection books
 ```
-$ ntbk collection books
-```
+
 This would create the file `collections/books/index.md`
 
 If you want to create a new file inside a collection, just pass it as another argument.
 
+```console
+foo@bar:~$ ntbk collection books 1984
 ```
-$ ntbk collection books 1984
-```
+
 Would create `collections/books/1984.md`
 
 ### Listing collections
 
 To list all your collections:
 
-```
-$ ntbk collections
+```console
+foo@bar:~$ ntbk collections
+books [2 files]
+travel-2022 [1 file]
+recipes [1 file]
 ```
 
 To list all the files within a collection
 
-```
-$ ntbk collection books --list
+```console
+foo@bar:~$ ntbk collection books --list
+1984.md
+brave-new-world.md
 ```
 
 ### Writing Templates
 
 The third directory in the `ntbk/` folder is `_templates`. Here you can create markdown files that will be used as a starting point for new files. Templates use the [Jinja2](https://jinja2docs.readthedocs.io/en/stable/templates.html) templating library, so all functions provided by jinja are available. 
 
-By default there are only a few variables provided to the templates. They are: `now`, `today_iso`, `now_iso`, `today_long`, and `now_long`. Log files get an additional variable `log_date` which is the file's date. 
+The following variables are available to templates by default. Additional variables can be provided in the [config file](#providing-additional-template-variables-in-config) and also with the [--vars flag](#providing-additional-template-variables-with---vars-flag).
 
-Additional variables can be provided in the config file and also with the `--vars` flag, which will be covered in a later section.
+| Variable     | Type     | Example                              | Notes                                                                       |
+|--------------|----------|--------------------------------------|-----------------------------------------------------------------------------|
+| `now`        | datetime |                                      | All python datetime methods are available                                   |
+| `today_iso`  | string   | 2021-12-16                           |                                                                             |
+| `now_iso`    | string   | 2021-12-16T13:18:37                  |                                                                             |
+| `today_long` | string   | Thursday, December 16, 2021          |                                                                             |
+| `now_long`   | string   | Thursday, December 16, 2021 01:18 PM |                                                                             |
+| `log_date`   | datetime |                                      | Only available in templates for log files. Represents the date of the file. |
+
+
 
 Given this template:
 
-```
+```markdown
 ## Built in variables
 
 {{ now.strftime('%A') }}
@@ -193,7 +220,7 @@ Given this template:
 
 The following would be rendered:
 
-```
+```markdown
 ## Built in variables
 
 Thursday
@@ -207,31 +234,37 @@ Thursday, December 16, 2021 01:18 PM
 
 You can specify a template to be used with the `--template` or `-t` argument.
 
-```
-$ ntbk today diary --template diary.md
+```console
+foo@bar:~$ ntbk today diary --template diary.md
 ```
 
 This will create the `diary.md` file for today using the `_templates/diary.md` template.
 
 Collections can also use templates.
 
-```
-$ ntbk collection recipes meatloaf --template recipe.md
+```console
+foo@bar:~$ ntbk collection recipes meatloaf --template recipe.md
 ```
 
 ### Listing available templates
 
-To see a list of templates available use the `templates` command
+To see a list of templates available use the `templates` command. This will also indicate if a template is set as a [default](#default-templates).
 
-```
-$ ntbk templates
+```console
+foo@bar:~$ ntbk templates
+bible-entry.md [log default: 'bible' files]
+grocery-list.md
+book-review.md [collection default: 'books' files]
+journal_default.md [log default: 'journal' files]
+log_default.md [log default: 'index' files]
+work-notes.md
 ```
 
 ### Default templates
 
 You can also set a default template to be used for log entries and collections in your `~/.config/ntbk/ntbk.yml` file:
 
-```
+```yaml
 default_templates:
   log:
     index: log_default
@@ -240,30 +273,35 @@ default_templates:
     books: book_review
     recipes: recipe
 ```
+
 The `log` section defines the template to use for each type of log file. 
 
 For example:
 
+```console
+foo@bar:~$ ntbk today
 ```
-$ ntbk today
-```
+
 Would use the `log_default.md` template (note the .md extension is implicit in the config).
 
+```console
+foo@bar:~$ ntbk today work
 ```
-$ ntbk today work
-```
+
 Would use the `work_notes.md` template
 
 For collections you can only specify a single template to be used by every file in the collection.
 
+```console
+foo@bar:~$ ntbk collection books 1984
 ```
-$ ntbk collection books 1984
-```
+
 Would use the `book_review.md` template
 
+```console
+foo@bar:~$ ntbk collection recipes
 ```
-$ ntbk collection recipes
-```
+
 Would create an `index.md` file and use the `recipe.md` template.
 
 If you have a default configured, but also use the `--template` argument, the default will be overridden. 
@@ -274,7 +312,7 @@ If you have a default configured, but also use the `--template` argument, the de
 
 If you have variables you want to be available to every template you can define them in the `template_vars` setting in `~/.config/ntbk/ntbk.yml`. You can provide any kind of data you like here. 
 
-```
+```yaml
 template_vars:
   owner: John Doe
   diary_tags:
@@ -284,7 +322,7 @@ template_vars:
 
 The `owner` and `diary_tags` variables would now be available in your templates. 
 
-```
+```markdown
 # Diary Entry
 Author: {{ owner }}
 Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
@@ -294,8 +332,8 @@ Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
 
 You can also provide additional variables at runtime with the `--vars` flag. These variables can only be simple strings in the format of `key=value`. You can provide as many as you like. Any values that contain spaces should be enclosed in quotes.
 
-```
-$ ntbk collection books dune --template book_review.md --vars title=Dune author="Frank Herbert"
+```console
+foo@bar:~$ ntbk collection books dune --template book_review.md --vars title=Dune author="Frank Herbert"
 ```
 
 ## Config
