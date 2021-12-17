@@ -19,6 +19,9 @@ CONFIG_DEFAULTS = {
         'log': {
             'index': 'log_default'
         }
+    },
+    'template_vars': {
+        'foo': 'bar'
     }
     }
 
