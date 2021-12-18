@@ -6,10 +6,10 @@ from datetime import datetime, date
 from colorama import Fore, Style
 
 # app imports
-import helpers
-from entities.collections import Collection, CollectionFile, get_all_collections
-from entities.logs import LogDate, LogFile
-from entities.templates import Template, get_all_templates
+from ntbk import helpers
+from ntbk.entities.collections import CollectionFile, get_all_collections
+from ntbk.entities.logs import LogFile
+from ntbk.entities.templates import Template, get_all_templates
 
 
 class Dispatcher():
@@ -56,6 +56,9 @@ class Dispatcher():
 
     def handle_logfile_command(self, args):
         """Handler for commands involving log files"""
+        if args.command is None:
+            args.command = 'today'
+
         dt = args.date if args.command == 'date' else helpers.get_date_object_for_alias(args.command)
         logfile = LogFile(self.config, self.filesystem, dt, args.file)
         if args.list:

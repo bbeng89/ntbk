@@ -2,8 +2,8 @@
 import os
 
 # app imports
-from entities.notebook import Notebook
-from exceptions import InvalidConfigException
+from ntbk.entities.notebook import Notebook
+from ntbk.exceptions import InvalidConfigException
 
 
 def init_config_file(config):

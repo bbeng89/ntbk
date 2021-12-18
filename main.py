@@ -5,14 +5,13 @@ import sys
 import colorama
 
 # app imports
-import initialize
-from config import Config
-from dispatcher import Dispatcher
-from filesystem import Filesystem
-from exceptions import InvalidConfigException
+from ntbk import initialize
+from ntbk.config import Config
+from ntbk.dispatcher import Dispatcher
+from ntbk.filesystem import Filesystem
+from ntbk.exceptions import InvalidConfigException
 
-
-if __name__ == '__main__':
+def main():
     try:
         config = Config()
         filesystem = Filesystem(config)
@@ -22,3 +21,6 @@ if __name__ == '__main__':
     except InvalidConfigException as e:
         print(e, file=sys.stderr)
         sys.exit(1)
+
+if __name__ == '__main__':
+    main()

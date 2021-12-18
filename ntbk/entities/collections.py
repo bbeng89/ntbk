@@ -1,5 +1,5 @@
 # app imports
-from entities.templates import Template
+from ntbk.entities.templates import Template
 
 
 class Collection():
