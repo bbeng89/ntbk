@@ -7,25 +7,27 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
 
 # Contents
 
-* [Why does this exist?](#why-does-this-exist)
-* [Project philosophy](#project-philosophy)
-* [Installation](#installation)
-* [Folder structure](#folder-structure)
-* [Usage](#usage)
-    * [Opening today's log](#opening-todays-log)
-    * [Opening logs for other days](#opening-logs-for-other-days)
-    * [Listing log files](#listing-log-files)
-    * [Jotting notes](#jotting-notes)
-    * [Opening collections](#opening-collections)
-    * [Listing collections](#listing-collections)
-    * [Writing templates](#writing-templates)
-    * [Using templates](#using-templates)
-    * [Listing available templates](#listing-available-templates)
-    * [Default templates](#default-templates)
-    * [Providing additional template variables in config](#providing-additional-template-variables-in-config)
-    * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
-* [Config](#config)
-* [Roadmap](#roadmap)
+- [Contents](#contents)
+  - [Why does this exist?](#why-does-this-exist)
+  - [Project philosophy](#project-philosophy)
+  - [Installation](#installation)
+  - [Folder structure](#folder-structure)
+  - [Usage](#usage)
+    - [Opening today's log](#opening-todays-log)
+    - [Opening logs for other days](#opening-logs-for-other-days)
+    - [Listing log files](#listing-log-files)
+    - [Jotting notes](#jotting-notes)
+    - [Opening collections](#opening-collections)
+    - [Listing collections](#listing-collections)
+    - [Writing Templates](#writing-templates)
+    - [Using templates](#using-templates)
+    - [Listing available templates](#listing-available-templates)
+    - [Default templates](#default-templates)
+    - [Providing additional template variables in config](#providing-additional-template-variables-in-config)
+    - [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
+  - [Config](#config)
+  - [Roadmap](#roadmap)
+  - [Contributing](#contributing)
 
 ## Why does this exist?
 
@@ -403,3 +405,8 @@ There is a lot more that can be done with this app. The following are ideas/feat
 - Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
 - Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
 - Natural language processing so you can do things like `ntbk last monday`
+- Possibly an accompanying mobile app one day. I'd like a very basic mobile markdown editor that worked with Dropbox (and maybe others) and had the ntbk shortcuts (today, collections, etc.)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md)
