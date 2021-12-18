@@ -265,7 +265,7 @@ foo@bar:~$ ntbk collection recipes meatloaf --template recipe
 
 ### Listing available templates
 
-To see a list of templates available use the `templates` command. This will also indicate if a template is set as a [default](#default-templates).
+To see a list of templates available use the `templates` command. 
 
 ```console
 foo@bar:~$ ntbk templates
