@@ -9,7 +9,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
 
 * [Why does this exist?](#why-does-this-exist)
 * [Project philosophy](#project-philosophy)
-* [Roadmap](#roadmap)
+* [Installation](#installation)
 * [Folder structure](#folder-structure)
 * [Usage](#usage)
     * [Opening today's log](#opening-todays-log)
@@ -25,6 +25,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
     * [Providing additional template variables in config](#providing-additional-template-variables-in-config)
     * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
 * [Config](#config)
+* [Roadmap](#roadmap)
 
 ## Why does this exist?
 
@@ -36,13 +37,18 @@ I used to be a dedicated bullet journaler until I got tired of the problem of no
 - It should be easy to navigate the generated file tree without ntbk.
 - No databases. Only work with the filesystem.
 
-## Roadmap
 
-There is a lot more that can be done with this app. The follow ideas/features are things I'd like to pursue:
+## Installation
 
-- Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
-- Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
-- Natural language processing so you can do things like `ntbk last monday`
+TODO - once I get the setup.py stuff done
+
+Once installed, just run:
+
+```console
+foo@bar:~$ ntbk
+```
+
+You will be prompted for the notebook directory and editor you want to use. This will create the config file and notebook folders for you then immediately open today's log. By default a simple template for log entries will be created for you at `_templates/log_default.md`.
 
 ## Folder structure
 
@@ -217,8 +223,6 @@ The following variables are available to templates by default. Additional variab
 | `now_long`   | string   | Thursday, December 16, 2021 01:18 PM |                                                                             |
 | `log_date`   | datetime |                                      | Only available in templates for log files. Represents the date of the file. |
 
-
-
 Given this template:
 
 ```markdown
@@ -391,3 +395,11 @@ template_vars:
   default_tags:
     - "2020"
 ```
+
+## Roadmap
+
+There is a lot more that can be done with this app. The follow ideas/features are things I'd like to pursue:
+
+- Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
+- Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
+- Natural language processing so you can do things like `ntbk last monday`
