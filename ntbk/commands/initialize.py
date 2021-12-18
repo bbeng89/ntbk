@@ -7,7 +7,7 @@ from exceptions import InvalidConfigException
 
 
 def init_config_file(config):
-    if not config.config_exists():
+    if not config.config_file_exists():
         config.reset_to_defaults()
 
     if not config.is_valid():

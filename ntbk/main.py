@@ -16,8 +16,7 @@ from exceptions import InvalidConfigException
 if __name__ == '__main__':
     try:
         config = Config()
-        templater = Templater()
-        filesystem = Filesystem(config, templater)
+        filesystem = Filesystem(config)
 
         colorama.init()
         initialize.init_app(config)

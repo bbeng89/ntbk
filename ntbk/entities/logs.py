@@ -2,18 +2,19 @@
 from datetime import date
 
 # app imports
-from templates import Template
+from entities.templates import Template
 
 
 class LogDate():
-    def __init__(self, config, dt)
+    def __init__(self, config, filesystem, dt):
         self.config = config
+        self.filesystem = filesystem
         self.dt = dt
 
-    def get_path():
-        self.filesystem.get_logs_base_path() / f"{dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}" 
+    def get_path(self):
+        return self.filesystem.get_log_base_path() / f"{self.dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}" 
 
-    def get_files():
+    def get_files(self):
         return [LogFile(self.config, self.filesystem, self.dt, child.stem) for child in self.get_path().glob('*.md')]
 
 
@@ -24,7 +25,7 @@ class LogFile():
     def __init__(self, config, filesystem, dt, filename):
         self.config = config
         self.filesystem = filesystem
-        self.logdate = LogDate(config, dt)
+        self.logdate = LogDate(config, filesystem, dt)
         self.filename = filename
 
     def get_path(self):
@@ -32,6 +33,14 @@ class LogFile():
 
     def get_name(self):
         return self.filename
+
+    def exists(self):
+        return self.get_path().exists()
+
+    def is_empty(self):
+        if not self.get_path().exists():
+            return True
+        return bool(self.get_path().read_text().strip())
 
     def get_default_template_name(self):
         return self.config\

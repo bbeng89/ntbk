@@ -1,5 +1,5 @@
 # app imports
-from templates import Template
+from entities.templates import Template
 
 
 class Collection():
@@ -45,6 +45,14 @@ class CollectionFile():
 
     def get_name(self):
         return self.filename
+
+    def exists(self):
+        return self.get_path().exists()
+
+    def is_empty(self):
+        if not self.get_path().exists():
+            return True
+        return bool(self.get_path().read_text().strip())
 
     def has_default_template(self):
         return self.collection.has_default_template()

@@ -7,6 +7,8 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class Template():
+
+    EXTENSION = '.md'
     extra_vars = {}
 
     def __init__(self, config, filesystem, name):
@@ -25,7 +27,7 @@ class Template():
     def render(self, extra_vars={}):
         vars = dict(self.get_variables())
         vars.update(extra_vars)
-        template = self.env.get_template(self.name)
+        template = self.env.get_template(self.name + self.EXTENSION)
         return template.render(**vars)
 
     def set_extra_vars(self, vars):
