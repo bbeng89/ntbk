@@ -15,7 +15,7 @@ class Collection():
         return self.name
 
     def has_default_template(self):
-        return self.get_default_template_name is not None
+        return self.get_default_template_name() is not None
 
     def get_default_template_name(self):
         return self.config.get('default_templates', {}).get('collection', {}).get(self.name, None)
