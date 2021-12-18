@@ -30,7 +30,7 @@ def get_date_object_for_alias(alias):
         return date.today() + timedelta(days=1)
     return None
 
-def argparse_valid_iso_date(self, s):
+def argparse_valid_iso_date(s):
     """Helper: Validator used by argparse to make sure given dates are in ISO format"""
     try:
         return date.fromisoformat(s)
