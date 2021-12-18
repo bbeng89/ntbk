@@ -11,13 +11,13 @@ foo@bar:~$ cd ntbk
 
 Create a virtualenv called "venv" and activate it
 
-```
+```console
 foo@bar:~$ python3 -m venv venv
 foo@bar:~$ source venv/bin/activate
 ```
 
 Install the app for development
 
-```
+```console
 foo@bar:~$ python setup.py develop
 ```
