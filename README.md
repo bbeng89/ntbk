@@ -279,7 +279,7 @@ work-notes
 
 ### Default templates
 
-You can also set a default template to be used for log entries and collections in your `~/.config/ntbk/ntbk.yml` file:
+You can also set a default template to be used for log entries and collections in your [config](#config) file:
 
 ```yaml
 default_templates:
@@ -327,7 +327,7 @@ If you have a default configured, but also use the `--template` argument, the de
 
 ### Providing additional template variables in config
 
-If you have variables you want to be available to every template you can define them in the `template_vars` setting in `~/.config/ntbk/ntbk.yml`. You can provide any kind of data you like here. 
+If you have variables you want to be available to every template you can define them in the `template_vars` setting in [your config](#config). You can provide any kind of data you like here. 
 
 ```yaml
 template_vars:
