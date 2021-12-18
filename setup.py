@@ -22,8 +22,9 @@ setup(
     classifiers=[
         "Productivity",
     ],
-    entry_points = '''
-        [console_scripts]
-        ntbk=main:run
-    '''
+    entry_points = {
+        'console_scripts': [
+            'ntbk=ntbk.main:run'
+        ]
+    }
 )
