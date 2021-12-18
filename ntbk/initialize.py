@@ -7,6 +7,7 @@ from exceptions import InvalidConfigException
 
 
 def init_config_file(config):
+    """Create the config file if it doesn't exist, then make sure the file is valid"""
     if not config.config_file_exists():
         config.reset_to_defaults()
 
@@ -15,6 +16,7 @@ def init_config_file(config):
 
 
 def init_notebook(config):
+    """Prompts user for notebook path and editor if not set, then updates config. Creates notebook if necessary."""
     if not config.is_valid():
         raise InvalidConfigException()
     
@@ -33,5 +35,6 @@ def init_notebook(config):
 
 
 def init_app(config):
+    """Initializes everything needed to run the app"""
     init_config_file(config)
     init_notebook(config)
