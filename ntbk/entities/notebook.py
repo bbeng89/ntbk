@@ -8,10 +8,10 @@ class Notebook():
         self.config = config
         self.notebook_path = Path(self.config.get('ntbk_dir')).expanduser()
 
-    def notebook_exists(self):
+    def exists(self):
         return self.notebook_path.exists()
 
-    def create_notebook(self):
+    def create(self):
         template_dir = self.config.get('template_dir')
         subfolders = [template_dir, 'collections', 'log']
 

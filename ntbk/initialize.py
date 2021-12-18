@@ -2,7 +2,7 @@
 import os
 
 # app imports
-from notebook import Notebook
+from entities.notebook import Notebook
 from exceptions import InvalidConfigException
 
 
@@ -28,8 +28,8 @@ def init_notebook(config):
     
     notebook = Notebook(config)
     
-    if not notebook.notebook_exists():
-        notebook.create_notebook()
+    if not notebook.exists():
+        notebook.create()
 
 
 def init_app(config):
