@@ -13,9 +13,9 @@ from entities.templates import Template, get_all_templates
 
 
 class Dispatcher():
+    """This class is responsible for parsing arguments to the program and handling them appropriately"""
 
     def __init__(self, config, filesystem):
-
         self.config = config
         self.filesystem = filesystem
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
@@ -29,10 +29,12 @@ class Dispatcher():
         self.configure_other_args()
 
     def run(self):
+        """Parse the args passed into the program and call the appropriate handler function"""
         args = self.parser.parse_args()
         args.func(args)
 
     def open_or_create_entity(self, args, entity):
+        """Open or create either a log or collection file. Entity must be either LogFile or CollectionFile"""
         template = None
 
         if not entity.exists():
@@ -48,10 +50,12 @@ class Dispatcher():
         self.filesystem.open_file_in_editor(entity.get_path())
 
     def list_entities(self, entities):
+        """Takes a list of LogFile or CollectionFile objects and prints out their names"""
         for e in entities:
             print(e.get_name())
 
     def handle_logfile_command(self, args):
+        """Handler for commands involving log files"""
         dt = args.date if args.command == 'date' else helpers.get_date_object_for_alias(args.command)
         logfile = LogFile(self.config, self.filesystem, dt, args.file)
         if args.list:
@@ -60,6 +64,7 @@ class Dispatcher():
             self.open_or_create_entity(args, logfile)
             
     def handle_collection_command(self, args):
+        """Handler for commands involving collection files"""
         collection_file = CollectionFile(self.config, self.filesystem, args.collection_name, args.file)
         if args.list:
             self.list_entities(collection_file.collection.get_files())
@@ -67,6 +72,7 @@ class Dispatcher():
             self.open_or_create_entity(args, collection_file)
 
     def handle_list_collections_command(self, args):
+        """Handler for the 'collections' command - lists all the collections"""
         for c in get_all_collections(self.config, self.filesystem):
             fcount = c.get_file_count()
             countstr = f'{fcount} {"file" if fcount == 1 else "files"}'
@@ -74,10 +80,12 @@ class Dispatcher():
             print(f'{c.get_name()} {color}[{countstr}]{Style.RESET_ALL}')
 
     def handle_list_templates_command(self, args):
+        """Handler for the 'templates' command - lists all the available templates"""
         for template in get_all_templates(self.config, self.filesystem):
             print(template.get_name())
 
     def handle_jot_command(self, args):
+        """Handler for the 'jot' command. Appends the given text to today's file, optionally with a timestamp"""
         dt = helpers.get_date_object_for_alias('today')
         logfile = LogFile(self.config, self.filesystem, dt, args.file)
         content = args.text
@@ -89,8 +97,8 @@ class Dispatcher():
         print(f"{Fore.GREEN}Jotted note to today's {logfile.get_name()} file{Style.RESET_ALL}")
         
     def configure_log_args(self):
+        """Configure all the possible args for commands involving log files"""
         default_file = self.config.get('default_filename')
-
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=default_file)
         parser_today.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
@@ -121,8 +129,8 @@ class Dispatcher():
         parser_date.set_defaults(func=self.handle_logfile_command)
 
     def configure_collection_args(self):
+        """Configure all the possible args for commands involving collection files"""
         default_file = self.config.get('default_filename')
-
         parser_collection = self.subparsers.add_parser('collection', help="Load given collection")
         parser_collection.add_argument('collection_name')
         parser_collection.add_argument('file', nargs='?', default=default_file)
@@ -135,8 +143,8 @@ class Dispatcher():
         parser_collections.set_defaults(func=self.handle_list_collections_command)
 
     def configure_other_args(self):
+        """Configure args for any other commands"""
         default_file = self.config.get('default_filename')
-
         parser_templates = self.subparsers.add_parser('templates', help="List all templates")
         parser_templates.set_defaults(func=self.handle_list_templates_command)
 
