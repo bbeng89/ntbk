@@ -9,6 +9,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
 
 * [Why does this exist?](#why-does-this-exist)
 * [Project philosophy](#project-philosophy)
+* [Roadmap](#roadmap)
 * [Folder structure](#folder-structure)
 * [Usage](#usage)
     * [Opening today's log](#opening-todays-log)
@@ -35,6 +36,13 @@ I used to be a dedicated bullet journaler until I got tired of the problem of no
 - It should be easy to navigate the generated file tree without ntbk.
 - No databases. Only work with the filesystem.
 
+## Roadmap
+
+There is a lot more that can be done with this app. The follow ideas/features are things I'd like to pursue:
+
+- Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
+- Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
+- Natural language processing so you can do things like `ntbk last monday`
 
 ## Folder structure
 
