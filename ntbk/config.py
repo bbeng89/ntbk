@@ -5,47 +5,59 @@ from pathlib import Path
 import yaml
 
 
-APP_CONFIG = {
-    'config_filepath': '~/.config/ntbk/ntbk.yml'
-}
+class Config():
 
+    CONFIG_FILEPATH = '~/.config/ntbk/ntbk.yml'
 
-CONFIG_DEFAULTS = {
-    'ntbk_dir': '',
-    'editor': '',
-    'default_filename': 'index',
-    'template_dir': '_templates',
-    'default_templates': {
-        'log': {
-            'index': 'log_default'
+    DEFAULTS = {
+        'ntbk_dir': '',
+        'editor': '',
+        'default_filename': 'index',
+        'template_dir': '_templates',
+        'default_templates': {
+            'log': {
+                'index': 'log_default'
+            }
+        },
+        'template_vars': {
+            'foo': 'bar'
         }
-    },
-    'template_vars': {
-        'foo': 'bar'
-    }
     }
 
+    REQUIRED_KEYS = ['ntbk_dir', 'editor', 'template_dir']
+    
+    _config = {}
 
-_config_path = Path(APP_CONFIG['config_filepath']).expanduser()
+    def __init__(self):
+        self._config_path = Path(self.CONFIG_FILEPATH).expanduser()
+        self.load()
 
+    def get(self, key, default=None):
+        return self._config.get(key, default)
 
-def config_exists():
-    return _config_path.exists()
+    def set(self, key, value):
+        self._config[key] = value
+        self.save()
 
+    def save(self):
+        self._config_path.parent.mkdir(parents=True, exist_ok=True)
+        self._config_path.write_text(yaml.dump(self._config))
 
-def load_config():
-    with _config_path.open() as file:
-        return yaml.load(file, Loader=yaml.FullLoader)
+    def is_valid(self):
+        for key in self.REQUIRED_KEYS:
+            if key not in self._config or not self._config[key]:
+                return False
+        return True
 
+    def load(self):
+        if self.config_file_exists():
+            with self._config_path.open() as file:
+                self._config = yaml.load(file, Loader=yaml.FullLoader)
 
-def validate_config():
-    required_keys = ['ntbk_dir', 'editor', 'template_dir']
-    config = load_config()
-    for key in required_keys:
-        if key not in config or not config[key]:
-            raise Exception('Configuration file is not valid')
+    def config_file_exists(self):
+        return self._config_path.exists()
 
+    def reset_to_defaults(self):
+        self._config = self.DEFAULTS
+        self.save()
 
-def save_config(config):
-    _config_path.parent.mkdir(parents=True, exist_ok=True)
-    _config_path.write_text(yaml.dump(config))

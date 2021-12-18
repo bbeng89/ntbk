@@ -1,29 +1,23 @@
 # system imports
-import os
 import argparse
-from pathlib import Path
 from datetime import date 
 
-# 3rd party imports
-from colorama import Fore, Style
-
 # app imports
-import config
-from templater import Templater
-from commands import initialize, logfile, template, collection, jot
+from commands.logfile import LogFileCommand
+from commands import logfile, template, collection, jot
 
 
 class Dispatcher():
 
-    def __init__(self):
-        # handles config and notebook directory
-        initialize.init_app()
+    def __init__(self, config, filesystem):
+
+        self.config = config
+        self.filesystem = filesystem
 
         # setup base argparser
-        self.config = config.load_config()
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
         # set all these defaults so that it will run without any args. This will default to the "today" command
-        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config['default_filename'], list=False, template=None, vars=[])
+        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, template=None, vars=[])
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         # setup subparsers
@@ -36,69 +30,48 @@ class Dispatcher():
         args.func(args)
 
     def handle_logfile_command(self, args):
-        if args.command == None:
-            dt = logfile.get_date('today')
-        else:
-            dt = logfile.get_date(args.date if args.command == 'date' else args.command)
-        file = self.get_full_path(logfile.filepath_for_date(dt, args.file))
-
-        # Logfiles get an extra template variable - log_date. This is the date of the log file (not necessarily TODAY)
-        extra_vars = { 'log_date': dt }
+        log_command = LogFileCommand(self.config, self.filesystem, args.command, args.file, args.date if args.command == 'date' else None)
 
         if args.list:
-            logfile.list_files_for_day(file.parent)
+            log_command.list_files_for_day()
         else:
-            if args.template: # check for template arg first to override default
-                self.new_file_from_template(file, args.template, args.vars, extra_vars)
-            elif self.config.get('default_templates', {}).get('log', {}).get(file.stem, None): # if no template arg, then check defaults
-                template_file = f"{self.config['default_templates']['log'][file.stem]}.md"
-                self.new_file_from_template(file, template_file, args.vars, extra_vars)
+            file = log_command.get_filepath()
+
+            if args.template: 
+                self.filesystem.new_file_from_template(file, args.template, args.vars, log_command.get_extra_vars())
+            elif log_command.has_default_template(): 
+                template_file = f"{log_command.get_default_template_name()}.md"
+                self.filesystem.new_file_from_template(file, template_file, args.vars, log_command.get_extra_vars())
                 
-            self.open_file_in_editor(file)
+            self.filesystem.open_file_in_editor(file)
 
     def handle_collection_command(self, args):
-        file = self.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
+        file = self.filesystem.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
 
         if args.list:
             collection.list_files_in_collection(file.parent)
         else:
-            if args.template: # check for template arg first to override default
-                self.new_file_from_template(file, args.template, args.vars)
-            elif self.config.get('default_templates', {}).get('collection', {}).get(args.collection_name, None): # if no template arg, then check defaults
-                template_file = f"{self.config['default_templates']['collection'][args.collection_name]}.md"
+            # check for template arg first to override default
+            if args.template: 
+                self.filesystem.new_file_from_template(file, args.template, args.vars)
+            # if no template arg, then check defaults
+            elif self.config.get('default_templates', {}).get('collection', {}).get(args.collection_name, None): 
+                template_file = f"{self.config.get('default_templates').get('collection').get(args.collection_name)}.md"
                 self.new_file_from_template(file, template_file, args.vars)
             
             self.open_file_in_editor(file)
 
+    def handle_list_collections_command(self, args):
+        collection.list_collections()
+
+    def handle_list_templates_command(self, args):
+        template.list_templates()
+
     def handle_jot_command(self, args):
         dt = logfile.get_date('today')
-        file = self.get_full_path(logfile.filepath_for_date(dt, args.file))
+        file = self.filesystem.get_full_path(logfile.filepath_for_date(dt, args.file))
         jot.jot_note(args.text, file, args.timestamp)
 
-
-    def new_file_from_template(self, file, template, var_args=[], extra_vars={}):
-        if file.exists() and file.read_text().strip():
-            # reading the text and stripping it rather than looking at byte size so spaces/NLs are ignored
-            #print(f"{Fore.YELLOW}Ignoring template because file already exists and is not empty.{Style.RESET_ALL}")
-            return False
-        else:
-            templater = Templater()
-            extra_vars.update(templater.convert_key_value_vars_to_dict(var_args))
-            templater.create_file_from_template(template, str(file), extra_vars)
-            return True
-
-    def open_file_in_editor(self, path):
-        # TODO - need to escape the filename if it has spaces in it
-        os.system(f"{self.config['editor']} {path}")
-
-    def get_full_path(self, file):
-        """Gets the full path to the given file, creating all parent directories"""
-        base_path = Path(self.config['ntbk_dir']).expanduser()
-        file_path = Path(file)
-        full_path = base_path / file_path
-        full_path.parent.mkdir(parents=True, exist_ok=True)
-        return full_path
-    
     def configure_log_args(self):
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=self.config['default_filename'])
@@ -139,11 +112,11 @@ class Dispatcher():
         parser_collection.set_defaults(func=self.handle_collection_command)
 
         parser_collections = self.subparsers.add_parser('collections', help="List all collections")
-        parser_collections.set_defaults(func=collection.list_collections)
+        parser_collections.set_defaults(func=self.handle_list_collections_command)
 
     def configure_other_args(self):
         parser_templates = self.subparsers.add_parser('templates', help="List all templates")
-        parser_templates.set_defaults(func=template.list_templates)
+        parser_templates.set_defaults(func=self.handle_list_templates_command)
 
         parser_jot = self.subparsers.add_parser('jot', help="Add a quick note to today's log without opening your editor")
         parser_jot.add_argument('text')
@@ -152,7 +125,7 @@ class Dispatcher():
         parser_jot.set_defaults(func=self.handle_jot_command)
 
     def valid_iso_date(self, s):
-        """Validator used by argparse to make sure given dates are in ISO format"""
+        """Helper: Validator used by argparse to make sure given dates are in ISO format"""
         try:
             return date.fromisoformat(s)
         except ValueError:

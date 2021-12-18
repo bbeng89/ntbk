@@ -1,29 +1,62 @@
 # system imports
 from datetime import date, timedelta
 
+class LogFileCommand():
 
-def filepath_for_date(dt, file):
-    return f"log/{dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}/{file}.md"
+    def __init__(self, config, filesystem, command, filename, specific_date = None):
+        self.config = config
+        self.filesystem = filesystem
+        self.command = command
+        self.filename = filename
+        self.specific_date = specific_date
 
+    def is_empty_command(self):
+        return self.command is None
 
-def get_date(date_arg):
-    if date_arg == 'today':
-        return date.today()
-    elif date_arg == 'yesterday':
-        return date.today() - timedelta(days=1)
-    elif date_arg == 'tomorrow':
-        return date.today() + timedelta(days=1)
+    def is_specific_date_command(self):
+        return self.command == 'date' and isinstance(self.specific_date, date)
 
-    return date_arg #should be a date instance
-    
+    def has_default_template(self):
+        return self.get_default_template is not None
 
-def get_files_for_day(day_path):
-    files = []
-    for child in day_path.glob('*.*'):
-        files.append(child)
-    return files
+    def get_default_template_name(self):
+        return self.config\
+            .get('default_templates', {})\
+            .get('log', {})\
+            .get(self.get_filepath().stem, None)
 
+    def get_filepath(self):
+        return self.filesystem.get_full_path(self.get_relative_filepath())
 
-def list_files_for_day(day_path):
-    for f in get_files_for_day(day_path):
-        print(f.relative_to(day_path))
+    def get_relative_filepath(self):
+        dt = self.get_date_object()
+
+        if dt is None:
+            return None
+
+        return f"log/{dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}/{self.filename}.md"
+
+    def get_extra_vars(self):
+        return { 'log_date': self.get_date_object() }
+
+    def get_date_object(self):
+        if self.is_specific_date_command():
+            return self.specific_date
+        elif self.command == 'today':
+            return date.today()
+        elif self.command == 'yesterday':
+            return date.today() - timedelta(days=1)
+        elif self.command == 'tomorrow':
+            return date.today() + timedelta(days=1)
+
+        return None
+
+    def get_files_for_day(self):
+        files = []
+        for child in self.get_filepath().parent.glob('*.*'):
+            files.append(child)
+        return files
+
+    def list_files_for_day(self):
+        for f in self.get_files_for_day():
+            print(f.relative_to(self.get_filepath().parent))

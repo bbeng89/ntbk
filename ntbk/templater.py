@@ -5,15 +5,12 @@ from datetime import date, datetime
 # 3rd party imports
 from jinja2 import Environment, FileSystemLoader
 
-# app imports
-import config
-
 
 class Templater():
 
-    def __init__(self):
-        self.config = config.load_config()
-        self.template_path = Path(self.config['ntbk_dir']).expanduser() / '_templates'
+    def __init__(self, config):
+        self.config = config
+        self.template_path = Path(self.config.get('ntbk_dir')).expanduser() / '_templates'
         self.env = Environment(loader=FileSystemLoader(str(self.template_path)))
     
 

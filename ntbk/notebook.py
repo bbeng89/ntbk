@@ -1,26 +1,27 @@
 # system imports
 from pathlib import Path
 
-# app imports
-from config import load_config
 
+class Notebook():
 
-def notebook_exists():
-    conf = load_config()
-    return Path(conf['ntbk_dir']).expanduser().exists()
+    def __init__(self, config):
+        self.config = config
+        self.notebook_path = Path(self.config.get('ntbk_dir')).expanduser()
 
+    def notebook_exists(self):
+        return self.notebook_path.exists()
 
-def create_notebook():
-    conf = load_config()
-    notebook_path = Path(conf['ntbk_dir']).expanduser()
-    subfolders = [conf['template_dir'], 'collections', 'log']
-    notebook_path.mkdir(parents=True, exist_ok=True)
+    def create_notebook(self):
+        template_dir = self.config.get('template_dir')
+        subfolders = [template_dir, 'collections', 'log']
 
-    for sub in subfolders:
-        (notebook_path / sub).mkdir(exist_ok=True)
-    
-    # create a basic template for new log entries
-    default_log_template = notebook_path / conf['template_dir'] / 'log_default.md'
-    default_log_template.write_text('# {{ today_long }}')
-    
-    print(f'Created notebook at {notebook_path}')
+        self.notebook_path.mkdir(parents=True, exist_ok=True)
+
+        for sub in subfolders:
+            (self.notebook_path / sub).mkdir(exist_ok=True)
+        
+        # create a basic template for new log entries
+        default_log_template = self.notebook_path / template_dir / 'log_default.md'
+        default_log_template.write_text('# {{ today_long }}')
+        
+        print(f'Created notebook at {self.notebook_path}')

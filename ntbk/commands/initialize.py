@@ -2,35 +2,36 @@
 import os
 
 # app imports
-import config
-import notebook
+from notebook import Notebook
+from exceptions import InvalidConfigException
 
 
-def init_config_file():
+def init_config_file(config):
     if not config.config_exists():
-        config.save_config(config.CONFIG_DEFAULTS)
-    else:
-        config.validate_config()
+        config.reset_to_defaults()
+
+    if not config.is_valid():
+        raise InvalidConfigException()
 
 
-def init_notebook():
-    if not config.config_exists():
-        raise Exception("Can't initialize notebook until config file has been created")
+def init_notebook(config):
+    if not config.is_valid():
+        raise InvalidConfigException()
     
-    conf = config.load_config()
+    if not config.get('ntbk_dir'):
+        ntbk_dir = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
+        config.set('ntbk_dir', ntbk_dir)
 
-    if not conf['ntbk_dir']:
-        conf['ntbk_dir'] = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
-        config.save_config(conf)
-
-    if not conf['editor']:
-        conf['editor'] = input('Editor (will fallback to $EDITOR, then finally vim, if not specified):') or os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim'
-        config.save_config(conf)
+    if not config.get('editor'):
+        editor = input('Editor (will fallback to $EDITOR, then finally vim, if not specified):') or os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim'
+        config.set('editor', editor)
+    
+    notebook = Notebook(config)
     
     if not notebook.notebook_exists():
         notebook.create_notebook()
 
 
-def init_app():
-    init_config_file()
-    init_notebook()
+def init_app(config):
+    init_config_file(config)
+    init_notebook(config)

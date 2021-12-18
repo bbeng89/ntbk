@@ -19,7 +19,7 @@ def is_default_template(type, template):
 
 
 
-def list_templates(args):
+def list_templates():
     conf = config.load_config()
     template_dir = Path(conf['ntbk_dir']).expanduser() / conf['template_dir']
     
