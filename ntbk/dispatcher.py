@@ -56,6 +56,9 @@ class Dispatcher():
 
     def handle_logfile_command(self, args):
         """Handler for commands involving log files"""
+        if args.command is None:
+            args.command = 'today'
+
         dt = args.date if args.command == 'date' else helpers.get_date_object_for_alias(args.command)
         logfile = LogFile(self.config, self.filesystem, dt, args.file)
         if args.list:
