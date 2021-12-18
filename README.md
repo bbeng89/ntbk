@@ -398,7 +398,7 @@ template_vars:
 
 ## Roadmap
 
-There is a lot more that can be done with this app. The follow ideas/features are things I'd like to pursue:
+There is a lot more that can be done with this app. The following are ideas/features I'd like to pursue:
 
 - Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
 - Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
