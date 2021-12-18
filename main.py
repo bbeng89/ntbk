@@ -11,7 +11,7 @@ from ntbk.dispatcher import Dispatcher
 from ntbk.filesystem import Filesystem
 from ntbk.exceptions import InvalidConfigException
 
-def main():
+def run():
     try:
         config = Config()
         filesystem = Filesystem(config)
@@ -23,4 +23,4 @@ def main():
         sys.exit(1)
 
 if __name__ == '__main__':
-    main()
+    run()

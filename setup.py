@@ -16,7 +16,6 @@ setup(
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = 'https://github.com/bbeng89/ntbk',
-    py_modules = ['main'],
     packages = find_packages(),
     install_requires = [requirements],
     python_requires='>=3.7',
@@ -25,6 +24,6 @@ setup(
     ],
     entry_points = '''
         [console_scripts]
-        ntbk=main:main
+        ntbk=main:run
     '''
 )
