@@ -3,8 +3,10 @@ import argparse
 from datetime import date 
 
 # app imports
-from commands.logfile import LogFileCommand
-from commands import logfile, template, collection, jot
+import helpers
+from entities.collections import Collection, CollectionFile, get_all_collections
+from entities.logs import LogDate, LogFile
+from entities.templates import Template, get_all_templates
 
 
 class Dispatcher():
@@ -13,8 +15,6 @@ class Dispatcher():
 
         self.config = config
         self.filesystem = filesystem
-
-        # setup base argparser
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
         # set all these defaults so that it will run without any args. This will default to the "today" command
         self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, template=None, vars=[])
@@ -29,49 +29,59 @@ class Dispatcher():
         args = self.parser.parse_args()
         args.func(args)
 
-    def handle_logfile_command(self, args):
-        log_command = LogFileCommand(self.config, self.filesystem, args.command, args.file, args.date if args.command == 'date' else None)
+    def open_or_create_entity(self, entity):
+        template = None
 
-        if args.list:
-            log_command.list_files_for_day()
-        else:
-            file = log_command.get_filepath()
-
-            if args.template: 
-                self.filesystem.new_file_from_template(file, args.template, args.vars, log_command.get_extra_vars())
-            elif log_command.has_default_template(): 
-                template_file = f"{log_command.get_default_template_name()}.md"
-                self.filesystem.new_file_from_template(file, template_file, args.vars, log_command.get_extra_vars())
-                
-            self.filesystem.open_file_in_editor(file)
-
-    def handle_collection_command(self, args):
-        file = self.filesystem.get_full_path(collection.filepath_for_collection(args.collection_name, args.file))
-
-        if args.list:
-            collection.list_files_in_collection(file.parent)
-        else:
-            # check for template arg first to override default
-            if args.template: 
-                self.filesystem.new_file_from_template(file, args.template, args.vars)
-            # if no template arg, then check defaults
-            elif self.config.get('default_templates', {}).get('collection', {}).get(args.collection_name, None): 
-                template_file = f"{self.config.get('default_templates').get('collection').get(args.collection_name)}.md"
-                self.new_file_from_template(file, template_file, args.vars)
+        if args.template: 
+            template = Template(self.config, self.filesystem, args.template)
+        elif entity.has_default_template(): 
+            template = entity.get_default_template()
             
-            self.open_file_in_editor(file)
+        if template is not None:
+            template.set_extra_vars(helpers.convert_key_value_vars_to_dict(args.vars))
+            filesystem.create_file(entity.get_path(), template.render())
+
+        self.filesystem.open_file_in_editor(entity.get_path())
+
+    def list_entities(self, entities):
+        for e in entities:
+            print(e.get_name())
+
+    def handle_logfile_command(self, args):
+        dt = args.date if args.command == 'date' else helpers.get_date_object_for_alias(args.command)
+        logfile = LogFile(self.config, self.filesystem, dt, args.file)
+        if args.list:
+            self.list_entities(logfile.logdate.get_files())
+        else:
+            self.open_or_create_entity(logfile)
+            
+    def handle_collection_command(self, args):
+        collection_file = CollectionFile(self.config, self.filesystem, args.collection_name, args.file)
+        if args.list:
+            self.list_entities(collection_file.collection.get_files())
+        else:
+            self.open_or_create_entity(collection_file)
 
     def handle_list_collections_command(self, args):
-        collection.list_collections()
+        for c in get_all_collections(self.config, self.filesystem):
+            fcount = c.get_file_count()
+            countstr = f'{fcount} {"file" if fcount == 1 else "files"}'
+            color = Fore.BLUE if fcount == 1 else Fore.GREEN
+            print(f'{c.get_name()} {color}[{countstr}]{Style.RESET_ALL}')
 
     def handle_list_templates_command(self, args):
-        template.list_templates()
+        for template in get_all_templates(self.config, self.filesystem):
+            print(template.get_name())
 
     def handle_jot_command(self, args):
-        dt = logfile.get_date('today')
-        file = self.filesystem.get_full_path(logfile.filepath_for_date(dt, args.file))
-        jot.jot_note(args.text, file, args.timestamp)
+        dt = helpers.get_date_object_for_alias('today')
+        logfile = LogFile(self.config, self.filesystem, dt, args.file)
+        content = args.text
+        if args.timestamp:
+            content = f"[{datetime.now().strftime('%I:%M %p')}]\n" + content
 
+        filesystem.append_to_file(logfile.get_path(), content)
+        
     def configure_log_args(self):
         parser_today = self.subparsers.add_parser('today', help="Load today's log file")
         parser_today.add_argument('file', nargs='?', default=self.config['default_filename'])
@@ -123,11 +133,3 @@ class Dispatcher():
         parser_jot.add_argument('file', nargs='?', default=self.config['default_filename'], help="Jot to file other than the default")
         parser_jot.add_argument('--timestamp', '-s', action='store_true', help="Add a timestamp before the jotted note")
         parser_jot.set_defaults(func=self.handle_jot_command)
-
-    def valid_iso_date(self, s):
-        """Helper: Validator used by argparse to make sure given dates are in ISO format"""
-        try:
-            return date.fromisoformat(s)
-        except ValueError:
-            msg = "not a valid date: {0!r}".format(s)
-            raise argparse.ArgumentTypeError(msg)

@@ -21,17 +21,16 @@ class Filesystem():
     def get_templates_base_path(self):
         return self.get_notebook_base_path() / self.config.get('template_dir')
 
-    def get_full_file_path(self, file_relative_path):
-        """Gets the full path to the given file, creating all parent directories"""
-        full_path = self.get_notebook_base_path() / file_relative_path
-        full_path.parent.mkdir(parents=True, exist_ok=True)
-        return full_path
-
-    def create_file(self, out_file, content=None):
-        out_path = Path(out_file)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
+    def create_file(self, filepath, content=None):
+        filepath.parent.mkdir(parents=True, exist_ok=True)
         if content is not None:
-            out_path.write_text(content)
+            filepath.write_text(content)
+        else:
+            filepath.touch()
+
+    def append_to_file(self, filepath, content):
+        with file_path.open(mode='a') as f:
+            f.write(content)
 
     def new_file_from_template(self, file, template, var_args=[], extra_vars={}):
         if file.exists() and file.read_text().strip():
