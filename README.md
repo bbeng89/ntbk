@@ -9,6 +9,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
 
 * [Why does this exist?](#why-does-this-exist)
 * [Project philosophy](#project-philosophy)
+* [Installation](#installation)
 * [Folder structure](#folder-structure)
 * [Usage](#usage)
     * [Opening today's log](#opening-todays-log)
@@ -24,6 +25,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
     * [Providing additional template variables in config](#providing-additional-template-variables-in-config)
     * [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
 * [Config](#config)
+* [Roadmap](#roadmap)
 
 ## Why does this exist?
 
@@ -35,6 +37,18 @@ I used to be a dedicated bullet journaler until I got tired of the problem of no
 - It should be easy to navigate the generated file tree without ntbk.
 - No databases. Only work with the filesystem.
 
+
+## Installation
+
+TODO - once I get the setup.py stuff done
+
+Once installed, just run:
+
+```console
+foo@bar:~$ ntbk
+```
+
+You will be prompted for the notebook directory and editor you want to use. This will create the config file and notebook folders for you then immediately open today's log. By default a simple template for log entries will be created for you at `_templates/log_default.md`.
 
 ## Folder structure
 
@@ -124,14 +138,14 @@ To list all the files for a given date use the `--list` flag
 
 ```console
 foo@bar:~$ ntbk today --list
-work.md
-index.md
-notes.md
+work
+index
+notes
 ```
 
 ```console
 foo@bar:~$ ntbk date 2021-12-14 --list
-index.md
+index
 ```
 
 ### Jotting notes
@@ -140,21 +154,21 @@ Sometimes you just want to make a quick note without having to open your editor.
 
 ```console
 foo@bar:~$ ntbk jot "some quick note"
-Jotted note to today's index.md file
+Jotted note to today's index file
 ```
 
 If you'd like to jot to a different file you can specify the file after your note.
 
 ```console
 foo@bar:~$ ntbk jot "some quick note" notes
-Jotted note to today's notes.md file
+Jotted note to today's notes file
 ```
 
 To automatically add the current time before your jotted note use the `--timestamp` or `-s` flag.
 
 ```console
 foo@bar:~$ ntbk jot "some note" --timestamp
-Jotted note to today's index.md file
+Jotted note to today's index file
 ```
 
 ### Opening collections
@@ -190,8 +204,8 @@ To list all the files within a collection
 
 ```console
 foo@bar:~$ ntbk collection books --list
-1984.md
-brave-new-world.md
+1984
+brave-new-world
 ```
 
 ### Writing Templates
@@ -208,8 +222,6 @@ The following variables are available to templates by default. Additional variab
 | `today_long` | string   | Thursday, December 16, 2021          |                                                                             |
 | `now_long`   | string   | Thursday, December 16, 2021 01:18 PM |                                                                             |
 | `log_date`   | datetime |                                      | Only available in templates for log files. Represents the date of the file. |
-
-
 
 Given this template:
 
@@ -240,7 +252,7 @@ Thursday, December 16, 2021 01:18 PM
 You can specify a template to be used with the `--template` or `-t` argument.
 
 ```console
-foo@bar:~$ ntbk today diary --template diary.md
+foo@bar:~$ ntbk today diary --template diary
 ```
 
 This will create the `diary.md` file for today using the `_templates/diary.md` template.
@@ -248,26 +260,26 @@ This will create the `diary.md` file for today using the `_templates/diary.md` t
 Collections can also use templates.
 
 ```console
-foo@bar:~$ ntbk collection recipes meatloaf --template recipe.md
+foo@bar:~$ ntbk collection recipes meatloaf --template recipe
 ```
 
 ### Listing available templates
 
-To see a list of templates available use the `templates` command. This will also indicate if a template is set as a [default](#default-templates).
+To see a list of templates available use the `templates` command. 
 
 ```console
 foo@bar:~$ ntbk templates
-bible-entry.md [log default: 'bible' files]
-grocery-list.md
-book-review.md [collection default: 'books' files]
-journal_default.md [log default: 'journal' files]
-log_default.md [log default: 'index' files]
-work-notes.md
+bible-entry
+grocery-list
+book-review
+journal_default
+log_default
+work-notes
 ```
 
 ### Default templates
 
-You can also set a default template to be used for log entries and collections in your `~/.config/ntbk/ntbk.yml` file:
+You can also set a default template to be used for log entries and collections in your [config](#config) file:
 
 ```yaml
 default_templates:
@@ -315,7 +327,7 @@ If you have a default configured, but also use the `--template` argument, the de
 
 ### Providing additional template variables in config
 
-If you have variables you want to be available to every template you can define them in the `template_vars` setting in `~/.config/ntbk/ntbk.yml`. You can provide any kind of data you like here. 
+If you have variables you want to be available to every template you can define them in the `template_vars` setting in [your config](#config). You can provide any kind of data you like here. 
 
 ```yaml
 template_vars:
@@ -338,7 +350,7 @@ Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
 You can also provide additional variables at runtime with the `--vars` flag. These variables can only be simple strings in the format of `key=value`. You can provide as many as you like. Any values that contain spaces should be enclosed in quotes.
 
 ```console
-foo@bar:~$ ntbk collection books dune --template book_review.md --vars title=Dune author="Frank Herbert"
+foo@bar:~$ ntbk collection books dune --template book_review --vars title=Dune author="Frank Herbert"
 ```
 
 ## Config
@@ -383,3 +395,11 @@ template_vars:
   default_tags:
     - "2020"
 ```
+
+## Roadmap
+
+There is a lot more that can be done with this app. The following are ideas/features I'd like to pursue:
+
+- Vim plugin - I'd like to have a plugin so you can run ntbk commands from within vim, rather than going back to the terminal
+- Html/PDF/etc generation with something like pandoc (or maybe even jekyll)
+- Natural language processing so you can do things like `ntbk last monday`
