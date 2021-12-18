@@ -3,35 +3,45 @@ from entities.templates import Template
 
 
 class Collection():
+    """This class represents a folder in the /collections directory. It can contain multiple files"""
+
     def __init__(self, config, filesystem, name):
         self.config = config
         self.filesystem = filesystem
         self.name = name
 
     def get_path(self):
+        """Get the pathlib.Path object for this collection"""
         return self.filesystem.get_collection_base_path() / self.name
 
     def get_name(self):
+        """Get the string name for this collection"""
         return self.name
 
     def has_default_template(self):
+        """Whether or not this collection has a default template defined in the config file"""
         return self.get_default_template_name() is not None
 
     def get_default_template_name(self):
+        """Get the default template name in the config file. Returns None if there isn't one."""
         return self.config.get('default_templates', {}).get('collection', {}).get(self.name, None)
 
     def get_default_template(self):
+        """Get the default template Template object for this collection. Returns None if there isn't one."""
         if not self.has_default_template():
             return None
         return Template(self.config, self.filesystem, self.get_default_template_name())
 
     def get_files(self):
+        """Get a list of CollectionFile objects for each file in this collection"""
         return [CollectionFile(self.config, self.filesystem, self.name, child.stem) for child in self.get_path().glob('*.md')]
 
     def get_file_count(self):
+        """Get int number of files in this collection"""
         return len(self.get_files())
 
 class CollectionFile():
+    """This class represents a file within a particular collection"""
 
     EXTENSION = '.md'
 
@@ -41,30 +51,38 @@ class CollectionFile():
         self.filename = filename
 
     def get_path(self):
+        """Get the pathlib.Path object for this collection file"""
         return self.collection.get_path() / f'{self.filename}{self.EXTENSION}'
 
     def get_name(self):
+        """Get the name of this file (without extension)"""
         return self.filename
 
     def exists(self):
+        """Whether or not this file exists on disk yet"""
         return self.get_path().exists()
 
     def is_empty(self):
+        """Whether or not this file exists and contains any content. Spaces and newlines don't count."""
         if not self.get_path().exists():
             return True
         return bool(self.get_path().read_text().strip())
 
     def has_default_template(self):
+        """Whether or not this file belongs to a collection that has a default template"""
         return self.collection.has_default_template()
 
     def get_default_template_name(self):
+        """Get the default template name for the collection this file belongs to"""
         return self.collection.get_default_template_name()
 
     def get_default_template(self):
+        """Get the Template object for default template for the collection this file belongs to"""
         return self.collection.get_default_template()
 
 
 # Top-level function to list all collections
 def get_all_collections(config, filesystem):
+    """Get a list of Collection objects for all collections in the notebook"""
     return [Collection(config, filesystem, child.stem) for child in filesystem.get_collection_base_path().glob('*/')]
         

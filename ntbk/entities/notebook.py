@@ -3,15 +3,18 @@ from pathlib import Path
 
 
 class Notebook():
+    """This class represents the notebook (the directory defined in the ntbk_dir config var)"""
 
     def __init__(self, config):
         self.config = config
         self.notebook_path = Path(self.config.get('ntbk_dir')).expanduser()
 
     def exists(self):
+        """Whether or not this notebook exists on the disk yet"""
         return self.notebook_path.exists()
 
     def create(self):
+        """Create the notebook, scaffolding the folders and a default template file"""
         template_dir = self.config.get('template_dir')
         subfolders = [template_dir, 'collections', 'log']
 
