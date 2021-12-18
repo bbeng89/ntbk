@@ -154,21 +154,21 @@ Sometimes you just want to make a quick note without having to open your editor.
 
 ```console
 foo@bar:~$ ntbk jot "some quick note"
-Jotted note to today's index.md file
+Jotted note to today's index file
 ```
 
 If you'd like to jot to a different file you can specify the file after your note.
 
 ```console
 foo@bar:~$ ntbk jot "some quick note" notes
-Jotted note to today's notes.md file
+Jotted note to today's notes file
 ```
 
 To automatically add the current time before your jotted note use the `--timestamp` or `-s` flag.
 
 ```console
 foo@bar:~$ ntbk jot "some note" --timestamp
-Jotted note to today's index.md file
+Jotted note to today's index file
 ```
 
 ### Opening collections
