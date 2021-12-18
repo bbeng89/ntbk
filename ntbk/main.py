@@ -5,11 +5,11 @@ import sys
 import colorama
 
 # app imports
+import initialize
 from config import Config
 from dispatcher import Dispatcher
 from templater import Templater
 from filesystem import Filesystem
-from commands import initialize
 from exceptions import InvalidConfigException
 
 
