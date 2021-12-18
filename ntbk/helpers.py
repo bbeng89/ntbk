@@ -10,7 +10,7 @@ def parse_key_val_var(var_str):
 
 
 def convert_key_value_vars_to_dict(var_list):
-    """Helper: Takes a list like ['foo=bar', 'bar=baz'] and converts it to {'foo': 'bar', 'bar': 'baz'} """
+    """Helper: Takes a list like ['foo=bar', 'bar=baz'] and converts it to a dict {'foo': 'bar', 'bar': 'baz'} """
     vars = {}
     for var in var_list:
         key, value = parse_key_val_var(var)
@@ -19,7 +19,7 @@ def convert_key_value_vars_to_dict(var_list):
 
 
 def get_date_object_for_alias(alias):
-    """Helper: get a datetime object for a given alias"""
+    """Helper: get a datetime object for a given alias. If alias is already a datetime object it will just be returned."""
     if isinstance(alias, date):
         return alias # it's already a date
     elif alias == 'today':
@@ -31,7 +31,7 @@ def get_date_object_for_alias(alias):
     return None
 
 def argparse_valid_iso_date(s):
-    """Helper: Validator used by argparse to make sure given dates are in ISO format"""
+    """Helper: Validator used by argparse to make sure given date string is in ISO format"""
     try:
         return date.fromisoformat(s)
     except ValueError:
