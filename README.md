@@ -124,14 +124,14 @@ To list all the files for a given date use the `--list` flag
 
 ```console
 foo@bar:~$ ntbk today --list
-work.md
-index.md
-notes.md
+work
+index
+notes
 ```
 
 ```console
 foo@bar:~$ ntbk date 2021-12-14 --list
-index.md
+index
 ```
 
 ### Jotting notes
@@ -190,8 +190,8 @@ To list all the files within a collection
 
 ```console
 foo@bar:~$ ntbk collection books --list
-1984.md
-brave-new-world.md
+1984
+brave-new-world
 ```
 
 ### Writing Templates
@@ -240,7 +240,7 @@ Thursday, December 16, 2021 01:18 PM
 You can specify a template to be used with the `--template` or `-t` argument.
 
 ```console
-foo@bar:~$ ntbk today diary --template diary.md
+foo@bar:~$ ntbk today diary --template diary
 ```
 
 This will create the `diary.md` file for today using the `_templates/diary.md` template.
@@ -248,7 +248,7 @@ This will create the `diary.md` file for today using the `_templates/diary.md` t
 Collections can also use templates.
 
 ```console
-foo@bar:~$ ntbk collection recipes meatloaf --template recipe.md
+foo@bar:~$ ntbk collection recipes meatloaf --template recipe
 ```
 
 ### Listing available templates
@@ -257,12 +257,12 @@ To see a list of templates available use the `templates` command. This will also
 
 ```console
 foo@bar:~$ ntbk templates
-bible-entry.md [log default: 'bible' files]
-grocery-list.md
-book-review.md [collection default: 'books' files]
-journal_default.md [log default: 'journal' files]
-log_default.md [log default: 'index' files]
-work-notes.md
+bible-entry
+grocery-list
+book-review
+journal_default
+log_default
+work-notes
 ```
 
 ### Default templates
@@ -338,7 +338,7 @@ Tags: {% for tag in diary_tags %}#{{ tag }} {% endfor %}
 You can also provide additional variables at runtime with the `--vars` flag. These variables can only be simple strings in the format of `key=value`. You can provide as many as you like. Any values that contain spaces should be enclosed in quotes.
 
 ```console
-foo@bar:~$ ntbk collection books dune --template book_review.md --vars title=Dune author="Frank Herbert"
+foo@bar:~$ ntbk collection books dune --template book_review --vars title=Dune author="Frank Herbert"
 ```
 
 ## Config
