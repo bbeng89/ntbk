@@ -2,9 +2,6 @@
 import pytest
 from freezegun import freeze_time
 
-# app imports
-from ntbk.dispatcher import Dispatcher
-
 
 @freeze_time("2021-12-30")
 def test_no_args_opens_today(dispatcher, ntbk_dir):
