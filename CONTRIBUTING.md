@@ -21,3 +21,13 @@ Install the app for development
 ```console
 foo@bar:~$ python setup.py develop
 ```
+
+## Tests
+
+Tests are written using [pytest](https://docs.pytest.org/en/6.2.x/), [pytest-mock](https://github.com/pytest-dev/pytest-mock/), and [freeze gun](https://github.com/spulec/freezegun).
+
+Run all tests:
+
+```console
+foo@bar:~$ pytest
+```
