@@ -1,4 +1,4 @@
-# Contributing to NTBK
+# Contributing to ntbk
 
 ## Setting up the project
 
