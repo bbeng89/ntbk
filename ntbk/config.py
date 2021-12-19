@@ -29,9 +29,17 @@ class Config():
     
     _config = {}
 
-    def __init__(self):
-        self._config_path = Path(self.CONFIG_FILEPATH).expanduser()
-        self.load()
+    def __init__(self, config=None, file_path=None):
+        """Initialize the config. Pass initial settings in with the config variable (useful for testing)"""
+
+        self._config_path = Path(file_path or self.CONFIG_FILEPATH).expanduser()
+
+        if config is not None:
+            conf = dict(self.DEFAULTS)
+            conf.update(config) 
+            self._config = conf
+        else:
+            self.load()
 
     def get(self, key, default=None):
         """Get the value from the config for the given key"""

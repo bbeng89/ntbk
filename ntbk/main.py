@@ -17,7 +17,7 @@ def run():
         filesystem = Filesystem(config)
         colorama.init()
         initialize.init_app(config)
-        Dispatcher(config, filesystem).run()
+        Dispatcher(config, filesystem).run(sys.argv[1:])
     except InvalidConfigException as e:
         print(e, file=sys.stderr)
         sys.exit(1)

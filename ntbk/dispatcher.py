@@ -28,9 +28,9 @@ class Dispatcher():
         self.configure_collection_args()
         self.configure_other_args()
 
-    def run(self):
+    def run(self, sys_args):
         """Parse the args passed into the program and call the appropriate handler function"""
-        args = self.parser.parse_args()
+        args = self.parser.parse_args(sys_args)
         args.func(args)
 
     def open_or_create_entity(self, args, entity):
