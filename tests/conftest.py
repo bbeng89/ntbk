@@ -29,3 +29,7 @@ def filesystem(config, mocker):
 @pytest.fixture
 def dispatcher(config, filesystem):
     return Dispatcher(config, filesystem)
+
+@pytest.fixture
+def ntbk_dir(filesystem):
+    return filesystem.get_notebook_base_path()
