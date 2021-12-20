@@ -4,7 +4,6 @@ freezegun==1.1.0
 iniconfig==1.1.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
--e git+ssh://git@github.com/bbeng89/ntbk.git@458d11196418cf8b1e4fa5abe473cf78e17c1255#egg=ntbk
 packaging==21.3
 pluggy==1.0.0
 py==1.11.0
