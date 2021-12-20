@@ -32,7 +32,7 @@ class Config():
     def __init__(self, config=None, file_path=None):
         """Initialize the config. Pass initial settings in with the config variable (useful for testing)"""
 
-        self._config_path = Path(file_path or self.CONFIG_FILEPATH).expanduser()
+        self._config_path = (file_path or Path(self.CONFIG_FILEPATH)).expanduser()
 
         if config is not None:
             conf = dict(self.DEFAULTS)
