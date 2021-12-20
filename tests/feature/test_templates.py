@@ -76,3 +76,14 @@ def test_var_arg_variables(dispatcher, ntbk_dir, template_factory):
     expected_file = ntbk_dir / 'collections/books/dune.md'
     dispatcher.run(['collection', 'books', 'dune', '--template', template.get_name(), '--vars', 'title=Dune', 'author=Frank Herbert'])
     assert expected_file.read_text() == 'Dune by Frank Herbert'
+
+@freeze_time('2021-12-25')
+def test_template_with_all_vars(dispatcher, ntbk_dir, template_factory):
+    template_content = '# Review of {{ title }} by {{ author }}\n'\
+        'Written by {{ notebook_owner }} on {{ today_iso }}'
+    dispatcher.config.set('template_vars', { 'notebook_owner': 'John Doe' })
+    template = template_factory(content=template_content)
+    expected_file = ntbk_dir / 'collections/book-reviews/dune.md'
+    dispatcher.run(['collection', 'book-reviews', 'dune', '--template', template.get_name(), '--vars', 'title=Dune', 'author=Frank Herbert'])
+    assert expected_file.read_text() == '# Review of Dune by Frank Herbert\n'\
+        'Written by John Doe on 2021-12-25'
