@@ -17,11 +17,13 @@ FAKE_TODAY = date(2021, 12, 30)
 
 @pytest.fixture
 def config(tmp_path):
-    return Config({ 
+    conf_file = tmp_path / '.config/ntbk/ntbk.yml'
+    conf = { 
         'ntbk_dir': str(tmp_path),
         'default_templates': {},
         'template_vars': {}
-        })
+    }
+    return Config(conf, conf_file)
 
 @pytest.fixture
 def filesystem(config, mocker):
