@@ -3,6 +3,8 @@ import pytest
 from ntbk.config import Config
 from ntbk.filesystem import Filesystem
 from ntbk.dispatcher import Dispatcher
+from ntbk.entities.logs import LogDate
+from ntbk.entities.templates import Template
 
 """
 This file is automatically loaded in every test by pytest.
@@ -33,3 +35,17 @@ def dispatcher(config, filesystem):
 @pytest.fixture
 def ntbk_dir(filesystem):
     return filesystem.get_notebook_base_path()
+
+@pytest.fixture
+def log_date(config, filesystem):
+    d = date(2021, 1, 1)
+    return LogDate(config, fileystem, d)
+
+@pytest.fixture
+def simple_template(config, filesystem):
+    name = 'test_template'
+    template_path = filesystem.get_templates_base_path()
+    template_path.mkdir(parents=True, exist_ok=True)
+    (template_path / (name + '.md')).write_text('# Simple Template')
+    return Template(config, filesystem, 'test_template')
+
