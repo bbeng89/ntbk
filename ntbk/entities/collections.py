@@ -17,7 +17,7 @@ class Collection():
     def get_name(self):
         """Get the string name for this collection"""
         return self.name
-
+    
     def has_default_template(self):
         """Whether or not this collection has a default template defined in the config file"""
         return self.get_default_template_name() is not None
@@ -39,6 +39,11 @@ class Collection():
     def get_file_count(self):
         """Get int number of files in this collection"""
         return len(self.get_files())
+
+    def create_directories(self):
+        """Create all the directories for this collection on disk"""
+        self.get_path().mkdir(parents=True, exist_ok=True)
+
 
 class CollectionFile():
     """This class represents a file within a particular collection"""
@@ -82,6 +87,10 @@ class CollectionFile():
     def get_default_template(self):
         """Get the Template object for default template for the collection this file belongs to"""
         return self.collection.get_default_template()
+
+    def create_directories(self):
+        """Create all the parent directories for this file on disk (does not create the file)"""
+        self.collection.create_directories()
 
 
 # Top-level function to list all collections

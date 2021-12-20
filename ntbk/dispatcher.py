@@ -37,7 +37,10 @@ class Dispatcher():
         """Open or create either a log or collection file. Entity must be either LogFile or CollectionFile"""
         template = None
 
+        entity.create_directories()
+
         if not entity.exists():
+
             if args.template: 
                 template = Template(self.config, self.filesystem, args.template)
             elif entity.has_default_template(): 

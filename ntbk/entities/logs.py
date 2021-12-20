@@ -25,6 +25,10 @@ class LogDate():
         """Return the date object for this LogDate"""
         return self.dt
 
+    def create_directories(self):
+        """Create all the directories for this log date on disk"""
+        self.get_path().mkdir(parents=True, exist_ok=True)
+
 
 class LogFile():
     """This class represents a file inside a LogDate"""
@@ -75,3 +79,7 @@ class LogFile():
         if not self.has_default_template():
             return None
         return Template(self.config, self.filesystem, self.get_default_template_name())
+
+    def create_directories(self):
+        """Creates all the parent directories for this file (does not actually create the file)"""
+        self.logdate.create_directories()
