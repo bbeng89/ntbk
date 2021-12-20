@@ -51,10 +51,12 @@ def collection_file(config, filesystem):
     return cf
 
 @pytest.fixture
-def simple_template(config, filesystem):
-    name = 'test_template'
-    template_path = filesystem.get_templates_base_path()
-    template_path.mkdir(parents=True, exist_ok=True)
-    (template_path / (name + '.md')).write_text('# Simple Template')
-    return Template(config, filesystem, 'test_template')
+def template_factory(config, filesystem):
+    # doing it this way lets us pass params into the fixture
+    def _template(name='test_template', content='# Simple Template'):
+        template_path = filesystem.get_templates_base_path()
+        template_path.mkdir(parents=True, exist_ok=True)
+        (template_path / (name + '.md')).write_text(content)
+        return Template(config, filesystem, name)
+    return _template
 
