@@ -43,8 +43,24 @@ def test_creating_collection_with_template_arg(dispatcher, ntbk_dir, template_fa
     assert expected_file.read_text() == template.render()
     dispatcher.filesystem.open_file_in_editor.assert_called_with(expected_file)
 
-def test_standard_variables_replaced():
-    pass
+@freeze_time('2021-01-01 03:21:34')
+def test_standard_variables_replaced(dispatcher, ntbk_dir, template_factory):
+    template_content = '{{ now.strftime("%A") }}\n'\
+        '{{ today_iso }}\n'\
+        '{{ now_iso }}\n'\
+        '{{ today_long }}\n'\
+        '{{ now_long }}\n'\
+        '{{ log_date.strftime("%A") }}'
+    template = template_factory(content=template_content)
+    expected_file = ntbk_dir / 'log/2021/01-january/2021-01-01/index.md'
+    dispatcher.run(['today', '--template', template.get_name()])
+    assert expected_file.read_text() == 'Friday\n'\
+        '2021-01-01\n'\
+        '2021-01-01T03:21:34\n'\
+        'Friday, January 01, 2021\n'\
+        'Friday, January 01, 2021 03:21 AM\n'\
+        'Friday'
+
 
 def test_config_template_variables():
     pass

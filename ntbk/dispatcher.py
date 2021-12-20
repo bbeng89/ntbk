@@ -44,7 +44,11 @@ class Dispatcher():
                 template = entity.get_default_template()
                 
             if template is not None:
-                template.set_extra_vars(helpers.convert_key_value_vars_to_dict(args.vars))
+                vars = {}
+                if isinstance(entity, LogFile):
+                    vars['log_date'] = entity.get_logdate().get_date()
+                vars.update(helpers.convert_key_value_vars_to_dict(args.vars))
+                template.set_extra_vars(vars)
                 self.filesystem.create_file(entity.get_path(), template.render())
 
         self.filesystem.open_file_in_editor(entity.get_path())
