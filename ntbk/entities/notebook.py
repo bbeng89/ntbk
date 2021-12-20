@@ -25,6 +25,6 @@ class Notebook():
         
         # create a basic template for new log entries
         default_log_template = self.notebook_path / template_dir / 'log_default.md'
-        default_log_template.write_text('# {{ today_long }}')
+        default_log_template.write_text("# {{ log_date.strftime('%A, %B %d, %Y') }}")
         
         print(f'Created notebook at {self.notebook_path}')
