@@ -5,6 +5,8 @@
 A simple, opinionated terminal notebook inspired by bullet journaling. 
 </p>
 
+![](https://github.com/bbeng89/ntbk/workflows/Tests/badge.svg)
+
 # Contents
 
 - [Contents](#contents)
