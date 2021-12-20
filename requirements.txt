@@ -1,4 +1,19 @@
+attrs==21.2.0
 colorama==0.4.4
+freezegun==1.1.0
+iniconfig==1.1.1
 Jinja2==3.0.3
 MarkupSafe==2.0.1
+-e git+ssh://git@github.com/bbeng89/ntbk.git@458d11196418cf8b1e4fa5abe473cf78e17c1255#egg=ntbk
+packaging==21.3
+pluggy==1.0.0
+py==1.11.0
+pydantic==1.7.3
+pydev==0.0.1
+pyparsing==3.0.6
+pytest==6.2.5
+pytest-mock==3.6.1
+python-dateutil==2.8.2
 PyYAML==6.0
+six==1.16.0
+toml==0.10.2

@@ -28,9 +28,9 @@ class Dispatcher():
         self.configure_collection_args()
         self.configure_other_args()
 
-    def run(self):
+    def run(self, sys_args):
         """Parse the args passed into the program and call the appropriate handler function"""
-        args = self.parser.parse_args()
+        args = self.parser.parse_args(sys_args)
         args.func(args)
 
     def open_or_create_entity(self, args, entity):
@@ -44,7 +44,11 @@ class Dispatcher():
                 template = entity.get_default_template()
                 
             if template is not None:
-                template.set_extra_vars(helpers.convert_key_value_vars_to_dict(args.vars))
+                vars = {}
+                if isinstance(entity, LogFile):
+                    vars['log_date'] = entity.get_logdate().get_date()
+                vars.update(helpers.convert_key_value_vars_to_dict(args.vars))
+                template.set_extra_vars(vars)
                 self.filesystem.create_file(entity.get_path(), template.render())
 
         self.filesystem.open_file_in_editor(entity.get_path())

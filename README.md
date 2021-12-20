@@ -31,18 +31,17 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
 
 ## Why does this exist?
 
-I used to be a dedicated bullet journaler until I got tired of the problem of not always having my notebook, and the general limitations of writing things by hand. I offloaded my todo list to Todoist and scheduling to the calendar provided by my email host. However, I didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. I tried apps like Joplin but I really just wanted to be in the terminal with Vim and nothing else. I was using Vim and NERDTree in Dropbox, which worked but I felt I needed some way of automating common tasks like opening todays log and quickly opening collections. That's where ntbk came in. 
+I used to be a dedicated bullet journaler until I got tired of not always having my notebook and the slowness of writing by hand. I moved my todo list to Todoist and scheduling to a web calendar, however, I still didn't have a good way of handling the long-form writing and journaling I did in my bullet journal. I tried apps like Joplin but I really wanted to only be in the terminal with Vim and nothing else. I tried Vim and NERDTree in Dropbox, which worked, but I felt I needed a way of automating common tasks like opening todays log and collections, so ntbk was born. 
 
 ## Project philosophy
 
-- Don't reinvent the wheel. Functions like todo lists and scheduling are handled better by other apps. Versioning and backup can be done by Dropbox and git. Searching can be handled by grep. These tasks are up to the user and outside the scope of this project. ntbk only provides shortcuts to working within its opinionated structure.
+- Don't reinvent the wheel. Todo lists and scheduling are handled better by other apps. Versioning and backup can be done by Dropbox and git. Grep works great for search. These tasks are up to the user and outside the scope of this project. ntbk only provides shortcuts to working with plain text files within its opinionated structure.
 - It should be easy to navigate the generated file tree without ntbk.
 - No databases. Only work with the filesystem.
 
-
 ## Installation
 
-TODO - once I get the setup.py stuff done
+TODO - once I get it deployed to PyPi.
 
 Once installed, just run:
 

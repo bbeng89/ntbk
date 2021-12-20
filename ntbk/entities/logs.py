@@ -21,6 +21,10 @@ class LogDate():
         """Get all the files for this log date"""
         return [LogFile(self.config, self.filesystem, self.dt, child.stem) for child in self.get_path().glob('*.md')]
 
+    def get_date(self):
+        """Return the date object for this LogDate"""
+        return self.dt
+
 
 class LogFile():
     """This class represents a file inside a LogDate"""
@@ -40,6 +44,10 @@ class LogFile():
     def get_name(self):
         """Get the name of this file (without extension)"""
         return self.filename
+
+    def get_logdate(self):
+        """Get the LogDate object this file belongs to"""
+        return self.logdate
 
     def exists(self):
         """Whether or not this file exists on disk"""
