@@ -61,9 +61,18 @@ def test_standard_variables_replaced(dispatcher, ntbk_dir, template_factory):
         'Friday, January 01, 2021 03:21 AM\n'\
         'Friday'
 
+@freeze_time('2021-01-01')
+def test_config_template_variables(dispatcher, ntbk_dir, template_factory):
+    dispatcher.config.set('template_vars', { 'first_name': 'John', 'last_name': 'Doe'})
+    template_content = '{{ first_name }} {{ last_name }}'
+    template = template_factory(content=template_content)
+    expected_file = ntbk_dir / 'log/2021/01-january/2021-01-01/index.md'
+    dispatcher.run(['today', '--template', template.get_name()])
+    assert expected_file.read_text() == 'John Doe'
 
-def test_config_template_variables():
-    pass
-
-def test_var_arg_variables():
-    pass
+def test_var_arg_variables(dispatcher, ntbk_dir, template_factory):
+    template_content = '{{ title }} by {{ author }}'
+    template = template_factory(content=template_content)
+    expected_file = ntbk_dir / 'collections/books/dune.md'
+    dispatcher.run(['collection', 'books', 'dune', '--template', template.get_name(), '--vars', 'title=Dune', 'author=Frank Herbert'])
+    assert expected_file.read_text() == 'Dune by Frank Herbert'
