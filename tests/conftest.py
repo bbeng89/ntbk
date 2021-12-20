@@ -5,6 +5,7 @@ from ntbk.filesystem import Filesystem
 from ntbk.dispatcher import Dispatcher
 from ntbk.entities.logs import LogDate
 from ntbk.entities.templates import Template
+from ntbk.entities.collections import CollectionFile, Collection
 
 """
 This file is automatically loaded in every test by pytest.
@@ -40,6 +41,14 @@ def ntbk_dir(filesystem):
 def log_date(config, filesystem):
     d = date(2021, 1, 1)
     return LogDate(config, fileystem, d)
+
+@pytest.fixture
+def collection_file(config, filesystem):
+    collection_name = 'test-collection'
+    file_name = 'index'
+    cf =  CollectionFile(config, filesystem, collection_name, file_name)
+    cf.get_collection().get_path().mkdir(parents=True)
+    return cf
 
 @pytest.fixture
 def simple_template(config, filesystem):

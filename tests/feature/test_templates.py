@@ -17,8 +17,15 @@ def test_creating_new_collection_with_default_template(dispatcher, ntbk_dir, sim
     assert expected_file.read_text() == '# Simple Template'
     dispatcher.filesystem.open_file_in_editor.assert_called_with(expected_file)
 
-def test_non_empty_file_not_overwritten():
-    pass
+def test_non_empty_file_not_overwritten(dispatcher, collection_file, simple_template):
+    t_name = simple_template.get_name()
+    c_name = collection_file.get_collection().get_name()
+    dispatcher.config.set('default_templates', {'collection': { c_name: t_name }})
+    collection_file.get_path().write_text('Placeholder text')
+    dispatcher.run(['collection', c_name, collection_file.get_name()])
+    # make sure the existing text is not overwritten by the default template
+    assert collection_file.get_path().read_text() == 'Placeholder text'
+    dispatcher.filesystem.open_file_in_editor.assert_called_with(collection_file.get_path())
 
 def test_creating_log_with_template_arg():
     pass

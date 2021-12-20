@@ -58,6 +58,9 @@ class CollectionFile():
         """Get the name of this file (without extension)"""
         return self.filename
 
+    def get_collection(self):
+        return self.collection
+
     def exists(self):
         """Whether or not this file exists on disk yet"""
         return self.get_path().exists()
