@@ -177,7 +177,8 @@ class Dispatcher():
         default_file = self.config.get('default_filename')
 
         # Setup subparser for 'today' command
-        parser_today = self.subparsers.add_parser('today', help="Load today's log file")
+        parser_today = self.subparsers.add_parser('today', aliases=['tod'],
+            help="Load today's log file")
 
         parser_today.add_argument('file', nargs='?', default=default_file)
 
@@ -197,10 +198,11 @@ class Dispatcher():
         parser_today.add_argument('--find-dir', '-d', action='store_true',
             help="Output the path to the file's directory")
 
-        parser_today.set_defaults(func=self.handle_logfile_command)
+        parser_today.set_defaults(command='today', func=self.handle_logfile_command)
 
         # Setup subparser for 'yesterday' command
-        parser_yest = self.subparsers.add_parser('yesterday', help="Load yesterday's log file")
+        parser_yest = self.subparsers.add_parser('yesterday', aliases=['yest'],
+            help="Load yesterday's log file")
 
         parser_yest.add_argument('file', nargs='?', default=default_file)
 
@@ -220,10 +222,11 @@ class Dispatcher():
         parser_yest.add_argument('--find-dir', '-d', action='store_true',
             help="Output the path to the file's directory")
 
-        parser_yest.set_defaults(func=self.handle_logfile_command)
+        parser_yest.set_defaults(command='yesterday', func=self.handle_logfile_command)
 
         # Setup subparser for 'tomorrow' command
-        parser_tom = self.subparsers.add_parser('tomorrow', help="Load tomorrow's log file")
+        parser_tom = self.subparsers.add_parser('tomorrow', aliases=['tom'],
+            help="Load tomorrow's log file")
 
         parser_tom.add_argument('file', nargs='?', default=default_file)
 
@@ -243,10 +246,11 @@ class Dispatcher():
         parser_tom.add_argument('--find-dir', '-d', action='store_true',
             help="Output the path to the file's directory")
 
-        parser_tom.set_defaults(func=self.handle_logfile_command)
+        parser_tom.set_defaults(command='tomorrow', func=self.handle_logfile_command)
 
         # Setup subparser for 'date' command
-        parser_date = self.subparsers.add_parser('date', help="Load given date's log file")
+        parser_date = self.subparsers.add_parser('date', aliases=['dt', 'd'],
+            help="Load given date's log file")
 
         parser_date.add_argument('date', type=helpers.argparse_valid_iso_date)
 
@@ -269,14 +273,15 @@ class Dispatcher():
         parser_date.add_argument('--find-dir', '-d', action='store_true',
             help="Output the path to the file's directory")
 
-        parser_date.set_defaults(func=self.handle_logfile_command)
+        parser_date.set_defaults(command='date', func=self.handle_logfile_command)
 
     def configure_collection_args(self):
         """Configure all the possible args for commands involving collection files"""
         default_file = self.config.get('default_filename')
 
         # Setup subparser for 'collection' command
-        parser_collection = self.subparsers.add_parser('collection', help="Load given collection")
+        parser_collection = self.subparsers.add_parser('collection', aliases=['col', 'c'],
+            help="Load given collection")
 
         parser_collection.add_argument('collection_name')
 
@@ -299,9 +304,10 @@ class Dispatcher():
         parser_collection.add_argument('--find-dir', '-d', action='store_true',
             help="Output the path to the file's directory")
 
-        parser_collection.set_defaults(func=self.handle_collection_command)
+        parser_collection.set_defaults(command='collection', func=self.handle_collection_command)
 
-        parser_collections = self.subparsers.add_parser('collections', help="List all collections")
+        parser_collections = self.subparsers.add_parser('collections', aliases=['cols'],
+            help="List all collections")
 
         parser_collections.set_defaults(func=self.handle_list_collections_command)
 
