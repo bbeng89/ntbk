@@ -70,9 +70,9 @@ class Dispatcher():
         if args.list:
             self.list_entities(logfile.logdate.get_files())
         elif args.find:
-            print(logfile.get_path(), end='')
+            print(logfile.get_path())
         elif args.find_dir:
-            print(logfile.get_logdate().get_path(), end='')
+            print(logfile.get_logdate().get_path())
         else:
             self.open_or_create_entity(args, logfile)
             
