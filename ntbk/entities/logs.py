@@ -1,29 +1,41 @@
-# system imports
-from datetime import date
+"""Classes representing log objects in the application"""
 
 # app imports
 from ntbk.entities.templates import Template
 
 
 class LogDate():
-    """This class represents a day in the log/ directory. It has 1-n LogFiles"""
+    """This class represents a day in the log/ directory. It has 1-n LogFiles.
 
-    def __init__(self, config, filesystem, dt):
+    Arguments:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        date_obj -- date object for the day this log belongs to
+
+    Attributes:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        date_obj -- date object for the day this log belongs to
+    """
+
+    def __init__(self, config, filesystem, date_obj):
         self.config = config
         self.filesystem = filesystem
-        self.dt = dt
+        self.date_obj = date_obj
 
     def get_path(self):
         """Get the pathlib.Path object to this log date (will be a folder)"""
-        return self.filesystem.get_log_base_path() / f"{self.dt.strftime('%Y/%m-%B/%Y-%m-%d').lower()}" 
+        return (self.filesystem.get_log_base_path() /
+            f"{self.date_obj.strftime('%Y/%m-%B/%Y-%m-%d').lower()}")
 
     def get_files(self):
         """Get all the files for this log date"""
-        return [LogFile(self.config, self.filesystem, self.dt, child.stem) for child in self.get_path().glob('*.md')]
+        return [LogFile(self.config, self.filesystem, self.date_obj, child.stem)
+            for child in self.get_path().glob('*.md')]
 
     def get_date(self):
         """Return the date object for this LogDate"""
-        return self.dt
+        return self.date_obj
 
     def create_directories(self):
         """Create all the directories for this log date on disk"""
@@ -31,14 +43,27 @@ class LogDate():
 
 
 class LogFile():
-    """This class represents a file inside a LogDate"""
+    """This class represents a file inside a LogDate.
+
+    Arguments:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        date_obj -- date object for the day this file belongs to
+        filename -- string name of file
+
+    Attributes:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        logdate -- LogDate instance for the day this file belongs to
+        filename -- string name of file
+    """
 
     EXTENSION = '.md'
 
-    def __init__(self, config, filesystem, dt, filename):
+    def __init__(self, config, filesystem, date_obj, filename):
         self.config = config
         self.filesystem = filesystem
-        self.logdate = LogDate(config, filesystem, dt)
+        self.logdate = LogDate(config, filesystem, date_obj)
         self.filename = filename
 
     def get_path(self):
@@ -58,13 +83,19 @@ class LogFile():
         return self.get_path().exists()
 
     def is_empty(self):
-        """Whether or not this file exists and has any content in it (spaces and newlines dont count)"""
+        """
+        Whether or not this file exists and has any content in it.
+        Spaces and newlines dont count.
+        """
         if not self.get_path().exists():
             return True
         return bool(self.get_path().read_text().strip())
 
     def get_default_template_name(self):
-        """Get the default template name for this file as defined in the config file. Returns None if there isn't one."""
+        """
+        Get the default template name for this file as defined in the config file.
+        Returns None if there isn't one.
+        """
         return self.config\
             .get('default_templates', {})\
             .get('log', {})\
@@ -75,7 +106,10 @@ class LogFile():
         return self.get_default_template_name() is not None
 
     def get_default_template(self):
-        """Get the default template Template object for this file. Returns None if there isn't one."""
+        """
+        Get the default template Template object for this file.
+        Returns None if there isn't one.
+        """
         if not self.has_default_template():
             return None
         return Template(self.config, self.filesystem, self.get_default_template_name())

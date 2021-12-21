@@ -1,3 +1,5 @@
+"""Main entry point into the application"""
+
 # system imports
 import sys
 
@@ -12,14 +14,15 @@ from ntbk.filesystem import Filesystem
 from ntbk.exceptions import InvalidConfigException
 
 def run():
+    """Run the application"""
     try:
         config = Config()
         filesystem = Filesystem(config)
         colorama.init()
         initialize.init_app(config)
         Dispatcher(config, filesystem).run(sys.argv[1:])
-    except InvalidConfigException as e:
-        print(e, file=sys.stderr)
+    except InvalidConfigException as err:
+        print(err, file=sys.stderr)
         sys.exit(1)
 
 if __name__ == '__main__':

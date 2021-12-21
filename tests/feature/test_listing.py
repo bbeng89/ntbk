@@ -1,8 +1,10 @@
+"""Test listing templates, collections, and files"""
 from unittest.mock import call
 from colorama import Fore, Style
 from freezegun import freeze_time
 
 def test_listing_templates(dispatcher, filesystem, mocker):
+    """Test 'templates' command lists all templates"""
     mocker.patch('builtins.print')
     template_path = filesystem.get_templates_base_path()
     template_path.mkdir(parents=True)
@@ -14,6 +16,7 @@ def test_listing_templates(dispatcher, filesystem, mocker):
     print.assert_has_calls([call('template_one'), call('template_two')], any_order=True)
 
 def test_listing_collections(dispatcher, filesystem, mocker):
+    """Test 'collections' command lists all collections"""
     mocker.patch('builtins.print')
     col_path = filesystem.get_collection_base_path()
     (col_path / 'books').mkdir(parents=True)
@@ -25,12 +28,13 @@ def test_listing_collections(dispatcher, filesystem, mocker):
     dispatcher.run(['collections'])
 
     print.assert_has_calls([
-        call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'), 
-        call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')], 
+        call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'),
+        call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')],
         any_order=True)
 
 @freeze_time("2020-01-01")
 def test_listing_log_files_for_day(dispatcher, filesystem, mocker):
+    """Test --list flag on log lists all files"""
     mocker.patch('builtins.print')
     log_base = filesystem.get_log_base_path()
     day_path = log_base / '2020/01-january/2020-01-01'
@@ -43,6 +47,7 @@ def test_listing_log_files_for_day(dispatcher, filesystem, mocker):
     print.assert_has_calls([call('index'), call('work')], any_order=True)
 
 def test_listing_collection_files(dispatcher, filesystem, mocker):
+    """test --list flag on collection lists all collection files"""
     mocker.patch('builtins.print')
     col_base = filesystem.get_collection_base_path()
     col_path = col_base / 'travel'
@@ -51,5 +56,5 @@ def test_listing_collection_files(dispatcher, filesystem, mocker):
     (col_path / 'utah.md').touch()
 
     dispatcher.run(['collection', 'travel', '--list'])
-    
+
     print.assert_has_calls([call('montana'), call('utah')], any_order=True)

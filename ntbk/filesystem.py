@@ -1,10 +1,17 @@
+"""Provides Fileystem class for interacting with the filesystem"""
+
 # system imports
 import os
+import shlex
 from pathlib import Path
 
 
 class Filesystem():
-    """This class should be the basis for all interactions with the filesystem including retrieving paths and creating files"""
+    """This class should always be used to retrieve paths and create files
+
+    Arguments:
+        config -- Config instance
+    """
 
     def __init__(self, config):
         self.config = config
@@ -25,20 +32,34 @@ class Filesystem():
         """Get the pathlib.Path object to the _templates folder (or whatever is configured)"""
         return self.get_notebook_base_path() / self.config.get('template_dir')
 
-    def create_file(self, filepath, content=None):
-        """Create a file (filepath must be a Path object) optionally with the given content. Parent directories will be created."""
+    def create_file(self, filepath, content=None): #pylint: disable=no-self-use
+        """Create a file. Parent directories will be created.
+
+        Arguments:
+            filepath -- Path object to file
+            content -- optional content to write to file
+        """
         filepath.parent.mkdir(parents=True, exist_ok=True)
+
         if content is not None:
             filepath.write_text(content)
         else:
             filepath.touch()
 
-    def append_to_file(self, filepath, content):
-        """Write content to the end of the given file (filepath must be a Path object)"""
-        with filepath.open(mode='a') as f:
-            f.write(content)
-    
+    def append_to_file(self, filepath, content): #pylint: disable=no-self-use
+        """Write content to the end of the given file (filepath must be a Path object)
+
+        Arguments:
+            filepath -- Path object to the file
+            content -- string content to write to the file
+        """
+        with filepath.open(mode='a') as file:
+            file.write(content)
+
     def open_file_in_editor(self, path):
-        """Open the given path in the configured editor. Can be a string or Path object, but must be the absolute path"""
-        # TODO - need to escape the filename if it has spaces in it
-        os.system(f"{self.config.get('editor')} {path}")
+        """Open the given path in the configured editor.
+
+        Arguments:
+            path -- String or Path object. Must be the absolute path
+        """
+        os.system(f"{self.config.get('editor')} {shlex.quote(path)}")

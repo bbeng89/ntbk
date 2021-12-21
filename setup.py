@@ -1,3 +1,5 @@
+"""Instructions for installing the app"""
+
 from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -10,7 +12,7 @@ setup(
     name = 'ntbk',
     version = '0.0.1',
     author = 'Blake Bengtson',
-    author_email = 'blake@962.dev',
+    author_email = 'blake@bengtson.us',
     license = 'MIT',
     description = 'A simple, opinionated terminal notebook inspired by bullet journaling.',
     long_description = long_description,

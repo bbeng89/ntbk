@@ -1,5 +1,6 @@
+"""Provides class the represents a Template in the application"""
+
 # system imports
-from pathlib import Path
 from datetime import date, datetime
 
 # 3rd party imports
@@ -7,7 +8,22 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class Template():
-    """This class represents a template file in the _templates directory. It knows how to render itself using Jinja2"""
+    """
+    Represents a template file in the _templates directory.
+    It knows how to render itself using Jinja2.
+
+    Arguments:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        name -- string name of the template
+
+    Attributes:
+        config -- Config instance
+        filesystem -- Filesystem instance
+        template_path -- Path object to root template dir
+        env -- Environment instance for Jinja2
+        name -- string template name
+    """
 
     EXTENSION = '.md'
     extra_vars = {}
@@ -27,18 +43,23 @@ class Template():
         """Get the string name of this template"""
         return self.name
 
-    def render(self, extra_vars={}):
+    def render(self, extra_vars=None):
         """Render this template with jinja2 and return the resulting template as a string"""
-        vars = dict(self.get_variables())
-        vars.update(extra_vars)
+        variables = dict(self.get_variables())
+        if extra_vars is not None:
+            variables.update(extra_vars)
         template = self.env.get_template(self.name + self.EXTENSION)
-        return template.render(**vars)
+        return template.render(**variables)
 
-    def set_extra_vars(self, vars):
-        """Set extra variables to be sent to the template when its rendered"""
-        self.extra_vars = vars
-    
-    def get_default_variables(self):
+    def set_extra_vars(self, variables):
+        """Set extra variables to be sent to the template when its rendered
+
+        Arguments:
+            variables -- dict of variables to pass to template
+        """
+        self.extra_vars = variables
+
+    def get_default_variables(self): #pylint: disable=no-self-use
         """Get the global default variables available to all templates"""
         now = datetime.now()
         today = date.today()
@@ -49,21 +70,20 @@ class Template():
             'today_long': today.strftime('%A, %B %d, %Y'),
             'now_long': now.strftime('%A, %B %d, %Y %I:%M %p')
         }
-    
+
     def get_config_variables(self):
         """Get the variables that are defined in the config file"""
         return self.config.get('template_vars', {}) or {}
 
     def get_variables(self):
         """Get a dict of all variables to be passed to the template"""
-        vars = dict(self.get_default_variables())
-        vars.update(self.get_config_variables())
-        vars.update(self.extra_vars)
-        return vars
+        variables = dict(self.get_default_variables())
+        variables.update(self.get_config_variables())
+        variables.update(self.extra_vars)
+        return variables
 
 
-# Top-level function to list all templates
 def get_all_templates(config, filesystem):
     """Get a list of Template objects for all templates in the notebook"""
-    return [Template(config, filesystem, child.stem) for child in filesystem.get_templates_base_path().glob('*.md')]
-
+    return [Template(config, filesystem, child.stem)
+        for child in filesystem.get_templates_base_path().glob('*.md')]

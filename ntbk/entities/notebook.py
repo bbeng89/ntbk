@@ -1,9 +1,19 @@
+"""Provides class that represents a Notebook in the application"""
+
 # system imports
 from pathlib import Path
 
 
 class Notebook():
-    """This class represents the notebook (the directory defined in the ntbk_dir config var)"""
+    """Represents the notebook (the directory defined in the ntbk_dir config var).
+
+    Arguments:
+        config -- Config instance
+
+    Attributes:
+        config -- Config instance
+        notebook_path -- Path object to the root notebook dir
+    """
 
     def __init__(self, config):
         self.config = config
@@ -22,9 +32,9 @@ class Notebook():
 
         for sub in subfolders:
             (self.notebook_path / sub).mkdir(exist_ok=True)
-        
+
         # create a basic template for new log entries
         default_log_template = self.notebook_path / template_dir / 'log_default.md'
         default_log_template.write_text("# {{ log_date.strftime('%A, %B %d, %Y') }}")
-        
+
         print(f'Created notebook at {self.notebook_path}')
