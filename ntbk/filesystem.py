@@ -2,7 +2,6 @@
 
 # system imports
 import os
-import shlex
 from pathlib import Path
 
 
@@ -62,4 +61,4 @@ class Filesystem():
         Arguments:
             path -- String or Path object. Must be the absolute path
         """
-        os.system(f"{self.config.get('editor')} {shlex.quote(path)}")
+        os.system(f"{self.config.get('editor')} {path}")
