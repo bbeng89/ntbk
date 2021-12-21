@@ -20,7 +20,7 @@ class Dispatcher():
         self.filesystem = filesystem
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
         # set all these defaults so that it will run without any args. This will default to the "today" command
-        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, template=None, vars=[])
+        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, find=False, find_dir=False, template=None, vars=[])
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         # setup subparsers
