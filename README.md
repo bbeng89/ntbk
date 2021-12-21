@@ -356,6 +356,42 @@ You can also provide additional variables at runtime with the `--vars` flag. The
 foo@bar:~$ ntbk collection books dune --template book_review --vars title=Dune author="Frank Herbert"
 ```
 
+### Finding files
+
+Passing the `--find` or `-f` flag will output the files path rather than opening it in your editor.
+
+```console
+foo@bar:~$ ntbk today --find
+/home/blake/ntbk/2021/12-december/2021-12-16/index.md
+foo@bar:~$ ntbk today notes -f
+/home/blake/ntbk/2021/12-december/2021-12-16/notes.md
+foo@bar:~$ ntbk collection books --find
+/home/blake/ntbk/collections/books
+```
+
+This can be useful if you want to do things like `cat` the contents of the file:
+
+```console
+foo@bar:~$ cat `ntbk today --find`
+```
+
+### Finding directories
+
+Passing the `--find-dir` or `-d` flag will output the directory path rather than opening it in your editor.
+
+```console
+foo@bar:~$ ntbk today --find-dir
+/home/blake/ntbk/2021/12-december/2021-12-16
+foo@bar:~$ ntbk collection books -d
+/home/blake/ntbk/collections/books
+```
+
+This can be useful if you want to do things like `cd` to the directory:
+
+```console
+foo@bar:~$ cd `ntbk today -d`
+```
+
 ## Config
 
 The config file is located at `~/.config/ntbk/ntbk.yml`
