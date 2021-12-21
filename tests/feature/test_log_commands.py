@@ -70,3 +70,23 @@ def test_non_iso_date_fails(dispatcher):
     with pytest.raises(SystemExit):
         dispatcher.run(['date', '01/01/2020'])
     dispatcher.filesystem.open_file_in_editor.assert_not_called()
+
+@freeze_time("2021-01-01")
+def test_finding_log_index_file(dispatcher, ntbk_dir, mocker):
+    mocker.patch('builtins.print')
+    expected_path = ntbk_dir / 'log/2021/01-january/2021-01-01/index.md'
+    dispatcher.run(['today', '--find'])
+    print.assert_called_once_with(expected_path)
+
+def test_finding_log_other_file(dispatcher, ntbk_dir, mocker):
+    mocker.patch('builtins.print')
+    expected_path = ntbk_dir / 'log/2021/01-january/2021-01-01/notes.md'
+    dispatcher.run(['date', '2021-01-01', 'notes', '--find'])
+    print.assert_called_once_with(expected_path)
+
+@freeze_time("2021-01-01")
+def test_finding_logdate(dispatcher, ntbk_dir, mocker):
+    mocker.patch('builtins.print')
+    expected_path = ntbk_dir / 'log/2021/01-january/2021-01-01'
+    dispatcher.run(['today', '--find-dir'])
+    print.assert_called_once_with(expected_path)

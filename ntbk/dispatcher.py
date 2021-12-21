@@ -20,7 +20,7 @@ class Dispatcher():
         self.filesystem = filesystem
         self.parser = argparse.ArgumentParser(prog='ntbk', description='NTBK - a simple terminal notebook application')
         # set all these defaults so that it will run without any args. This will default to the "today" command
-        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, template=None, vars=[])
+        self.parser.set_defaults(func=self.handle_logfile_command, file=self.config.get('default_filename'), list=False, find=False, find_dir=False, template=None, vars=[])
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         # setup subparsers
@@ -40,7 +40,6 @@ class Dispatcher():
         entity.create_directories()
 
         if not entity.exists():
-
             if args.template: 
                 template = Template(self.config, self.filesystem, args.template)
             elif entity.has_default_template(): 
@@ -70,6 +69,10 @@ class Dispatcher():
         logfile = LogFile(self.config, self.filesystem, dt, args.file)
         if args.list:
             self.list_entities(logfile.logdate.get_files())
+        elif args.find:
+            print(logfile.get_path())
+        elif args.find_dir:
+            print(logfile.get_logdate().get_path())
         else:
             self.open_or_create_entity(args, logfile)
             
@@ -78,6 +81,10 @@ class Dispatcher():
         collection_file = CollectionFile(self.config, self.filesystem, args.collection_name, args.file)
         if args.list:
             self.list_entities(collection_file.collection.get_files())
+        elif args.find:
+            print(collection_file.get_path())
+        elif args.find_dir:
+            print(collection_file.get_collection().get_path())
         else:
             self.open_or_create_entity(args, collection_file)
 
@@ -114,6 +121,8 @@ class Dispatcher():
         parser_today.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_today.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_today.add_argument('--list', '-l', action='store_true', help="List today's files")
+        parser_today.add_argument('--find', '-f', action='store_true', help="Output the path to the file")
+        parser_today.add_argument('--find-dir', '-d', action='store_true', help="Output the path to the file's directory")
         parser_today.set_defaults(func=self.handle_logfile_command)
 
         parser_yest = self.subparsers.add_parser('yesterday', help="Load yesterday's log file")
@@ -121,6 +130,8 @@ class Dispatcher():
         parser_yest.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_yest.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_yest.add_argument('--list', '-l', action='store_true', help="List yesterday's files")
+        parser_yest.add_argument('--find', '-f', action='store_true', help="Output the path to the file")
+        parser_yest.add_argument('--find-dir', '-d', action='store_true', help="Output the path to the file's directory")
         parser_yest.set_defaults(func=self.handle_logfile_command)
 
         parser_tom = self.subparsers.add_parser('tomorrow', help="Load tomorrow's log file")
@@ -128,6 +139,8 @@ class Dispatcher():
         parser_tom.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_tom.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_tom.add_argument('--list', '-l', action='store_true', help="List tomorrow's files")
+        parser_tom.add_argument('--find', '-f', action='store_true', help="Output the path to the file")
+        parser_tom.add_argument('--find-dir', '-d', action='store_true', help="Output the path to the file's directory")
         parser_tom.set_defaults(func=self.handle_logfile_command)
 
         parser_date = self.subparsers.add_parser('date', help="Load given date's log file")
@@ -136,6 +149,8 @@ class Dispatcher():
         parser_date.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_date.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_date.add_argument('--list', '-l', action='store_true', help="List given date's files")
+        parser_date.add_argument('--find', '-f', action='store_true', help="Output the path to the file")
+        parser_date.add_argument('--find-dir', '-d', action='store_true', help="Output the path to the file's directory")
         parser_date.set_defaults(func=self.handle_logfile_command)
 
     def configure_collection_args(self):
@@ -147,6 +162,8 @@ class Dispatcher():
         parser_collection.add_argument('--template', '-t', help='If creating, this template file will be used, overriding the default template')
         parser_collection.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[], help='Extra template variables in the format key=value. If value contains spaces, enclose it in quotes, e.g. key="my value"')
         parser_collection.add_argument('--list', '-l', action='store_true', help='List the files in given collection')
+        parser_collection.add_argument('--find', '-f', action='store_true', help="Output the path to the file")
+        parser_collection.add_argument('--find-dir', '-d', action='store_true', help="Output the path to the file's directory")
         parser_collection.set_defaults(func=self.handle_collection_command)
 
         parser_collections = self.subparsers.add_parser('collections', help="List all collections")
