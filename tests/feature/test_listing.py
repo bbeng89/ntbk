@@ -17,6 +17,7 @@ def test_listing_templates(dispatcher, filesystem, mocker):
 
 def test_listing_collections(dispatcher, filesystem, mocker):
     """Test 'collections' command lists all collections"""
+    aliases = ['collections', 'cols']
     mocker.patch('builtins.print')
     col_path = filesystem.get_collection_base_path()
     (col_path / 'books').mkdir(parents=True)
@@ -25,12 +26,14 @@ def test_listing_collections(dispatcher, filesystem, mocker):
     (col_path / 'recipes' / 'chili.md').touch()
     (col_path / 'recipes' / 'lasagna.md').touch()
 
-    dispatcher.run(['collections'])
+    for alias in aliases:
+        dispatcher.run([alias])
 
-    print.assert_has_calls([
-        call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'),
-        call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')],
-        any_order=True)
+        print.assert_has_calls([
+            call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'),
+            call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')],
+            any_order=True)
+        print.reset_mock()
 
 @freeze_time("2020-01-01")
 def test_listing_log_files_for_day(dispatcher, filesystem, mocker):
