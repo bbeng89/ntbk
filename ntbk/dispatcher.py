@@ -40,7 +40,7 @@ class Dispatcher():
             find=False,
             find_dir=False,
             template=None,
-            vars=[])
+            variables=[])
 
         self.subparsers = self.parser.add_subparsers(dest='command')
 
@@ -79,8 +79,8 @@ class Dispatcher():
                 variables = {}
                 if isinstance(entity, LogFile):
                     variables['log_date'] = entity.get_logdate().get_date()
-                variables.update(helpers.convert_key_value_vars_to_dict(args.vars))
-                template.set_extra_vars(vars)
+                variables.update(helpers.convert_key_value_vars_to_dict(args.variables))
+                template.set_extra_vars(variables)
                 self.filesystem.create_file(entity.get_path(), template.render())
 
         self.filesystem.open_file_in_editor(entity.get_path())
@@ -184,7 +184,8 @@ class Dispatcher():
         parser_today.add_argument('--template', '-t',
             help='If creating, this template file will be used, overriding the default template')
 
-        parser_today.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[],
+        parser_today.add_argument("--vars",
+            dest='variables', metavar="KEY=VALUE", nargs='+', default=[],
             help='Extra template variables in the format key=value. \
                  If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
@@ -206,7 +207,8 @@ class Dispatcher():
         parser_yest.add_argument('--template', '-t',
             help='If creating, this template file will be used, overriding the default template')
 
-        parser_yest.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[],
+        parser_yest.add_argument("--vars",
+            dest='variables', metavar="KEY=VALUE", nargs='+', default=[],
             help='Extra template variables in the format key=value. \
                 If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
@@ -228,7 +230,8 @@ class Dispatcher():
         parser_tom.add_argument('--template', '-t',
             help='If creating, this template file will be used, overriding the default template')
 
-        parser_tom.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[],
+        parser_tom.add_argument("--vars",
+            dest='variables', metavar="KEY=VALUE", nargs='+', default=[],
             help='Extra template variables in the format key=value. \
                 If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
@@ -252,7 +255,8 @@ class Dispatcher():
         parser_date.add_argument('--template', '-t',
             help='If creating, this template file will be used, overriding the default template')
 
-        parser_date.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[],
+        parser_date.add_argument("--vars",
+            dest='variables', metavar="KEY=VALUE", nargs='+', default=[],
             help='Extra template variables in the format key=value. \
                 If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
@@ -281,7 +285,8 @@ class Dispatcher():
         parser_collection.add_argument('--template', '-t',
             help='If creating, this template file will be used, overriding the default template')
 
-        parser_collection.add_argument("--vars", metavar="KEY=VALUE", nargs='+', default=[],
+        parser_collection.add_argument("--vars",
+            dest='variables', metavar="KEY=VALUE", nargs='+', default=[],
             help='Extra template variables in the format key=value. \
                 If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
