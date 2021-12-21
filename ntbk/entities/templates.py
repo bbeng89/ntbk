@@ -52,7 +52,7 @@ class Template():
     
     def get_config_variables(self):
         """Get the variables that are defined in the config file"""
-        return self.config.get('template_vars', {})
+        return self.config.get('template_vars', {}) or {}
 
     def get_variables(self):
         """Get a dict of all variables to be passed to the template"""
