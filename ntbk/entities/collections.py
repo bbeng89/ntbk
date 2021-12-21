@@ -1,9 +1,22 @@
+"""Classes to represent Collection entities in the app"""
+
 # app imports
 from ntbk.entities.templates import Template
 
 
 class Collection():
-    """This class represents a folder in the /collections directory. It can contain multiple files"""
+    """Represents a folder in the /collections directory. It can contain multiple files
+
+    Arguments:
+        config - Config instance
+        filesystem - Filesystem instance
+        name - string collection name
+
+    Attributes:
+        config - Config instance
+        filesystem - Filesystem instance
+        name - string collection name
+    """
 
     def __init__(self, config, filesystem, name):
         self.config = config
@@ -17,24 +30,25 @@ class Collection():
     def get_name(self):
         """Get the string name for this collection"""
         return self.name
-    
+
     def has_default_template(self):
         """Whether or not this collection has a default template defined in the config file"""
         return self.get_default_template_name() is not None
 
     def get_default_template_name(self):
-        """Get the default template name in the config file. Returns None if there isn't one."""
+        """Get the default template name in the config file or None if there isn't one."""
         return self.config.get('default_templates', {}).get('collection', {}).get(self.name, None)
 
     def get_default_template(self):
-        """Get the default template Template object for this collection. Returns None if there isn't one."""
+        """Get the default template Template object or None if there isn't one."""
         if not self.has_default_template():
             return None
         return Template(self.config, self.filesystem, self.get_default_template_name())
 
     def get_files(self):
         """Get a list of CollectionFile objects for each file in this collection"""
-        return [CollectionFile(self.config, self.filesystem, self.name, child.stem) for child in self.get_path().glob('*.md')]
+        return [CollectionFile(self.config, self.filesystem, self.name, child.stem)
+            for child in self.get_path().glob('*.md')]
 
     def get_file_count(self):
         """Get int number of files in this collection"""
@@ -46,7 +60,19 @@ class Collection():
 
 
 class CollectionFile():
-    """This class represents a file within a particular collection"""
+    """Represents a file within a collection
+
+    Arguments:
+        config - Config instance
+        filesystem - Filesystem instance
+        collection_name - string name of the collection
+        filename - string name of the file inside the collection
+
+    Attributes:
+        config - Config instance
+        collection - Collection object - collection file belongs to
+        filename - string name of the file inside the collection
+    """
 
     EXTENSION = '.md'
 
@@ -64,6 +90,7 @@ class CollectionFile():
         return self.filename
 
     def get_collection(self):
+        """Get Collection object that this file belongs to"""
         return self.collection
 
     def exists(self):
@@ -71,7 +98,10 @@ class CollectionFile():
         return self.get_path().exists()
 
     def is_empty(self):
-        """Whether or not this file exists and contains any content. Spaces and newlines don't count."""
+        """
+        Whether or not this file exists and contains any content.
+        Spaces and newlines don't count.
+        """
         if not self.get_path().exists():
             return True
         return bool(self.get_path().read_text().strip())
@@ -93,8 +123,13 @@ class CollectionFile():
         self.collection.create_directories()
 
 
-# Top-level function to list all collections
 def get_all_collections(config, filesystem):
-    """Get a list of Collection objects for all collections in the notebook"""
-    return [Collection(config, filesystem, child.stem) for child in filesystem.get_collection_base_path().glob('*/')]
+    """Get a list of Collection objects for all collections in the notebook
+
+    Arguments:
+        config - Config instance
+        filesystem - Filesystem instance
+    """
+    return [Collection(config, filesystem, child.stem)
+        for child in filesystem.get_collection_base_path().glob('*/')]
         
