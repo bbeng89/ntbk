@@ -27,6 +27,8 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
     - [Default templates](#default-templates)
     - [Providing additional template variables in config](#providing-additional-template-variables-in-config)
     - [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
+    - [Finding files](#finding-files)
+    - [Finding directories](#finding-directories)
   - [Config](#config)
   - [Roadmap](#roadmap)
   - [Contributing](#contributing)
@@ -377,7 +379,7 @@ foo@bar:~$ cat `ntbk today --find`
 
 ### Finding directories
 
-Passing the `--find-dir` or `-d` flag will output the directory path rather than opening it in your editor.
+Passing the `--find-dir` or `-d` flag will output the directory path.
 
 ```console
 foo@bar:~$ ntbk today --find-dir
