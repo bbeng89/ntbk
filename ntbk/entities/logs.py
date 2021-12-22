@@ -102,7 +102,7 @@ class LogFile():
         if not self.config.get('default_templates').get('log'):
             return None
         return self.config.get('default_templates').get('log').get(self.filename)
-        
+
     def has_default_template(self):
         """Whether or not this file has a default template defined in the config file"""
         return self.get_default_template_name() is not None
