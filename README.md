@@ -29,6 +29,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
     - [Providing additional template variables with --vars flag](#providing-additional-template-variables-with---vars-flag)
     - [Finding files](#finding-files)
     - [Finding directories](#finding-directories)
+    - [Abbreviated commands](#abbreviated-commands)
   - [Config](#config)
   - [Roadmap](#roadmap)
   - [Contributing](#contributing)
@@ -97,9 +98,9 @@ To open today's log file you can use the `today` command.
 foo@bar:~$ ntbk today
 ```
 
- This will open the file `log/2021/12-december/2021-12-16/index.md`. The file will be created if it doesn't already exist.
+This will open the file `log/2021/12-december/2021-12-16/index.md`. The file will be created if it doesn't already exist.
 
- Simply running the script without any arguments is the same as using the today command, however, you cannot add any additional arguments like `--template` or specify a different file (covered later). It's simply a shortcut to open today's index file.
+Simply running the script without any arguments is the same as using the today command, however, you cannot add any additional arguments like `--template` or specify a different file (covered later). It's simply a shortcut to open today's index file.
  
  ```console
  foo@bar:~$ ntbk
@@ -392,6 +393,28 @@ This can be useful if you want to do things like `cd` to the directory:
 
 ```console
 foo@bar:~$ cd `ntbk today -d`
+```
+
+### Abbreviated commands
+
+The following command abbreviations are available:
+
+`today` = `tod`
+
+`tomorrow` = `tom`
+
+`yesterday` = `yest`
+
+`date` = `dt` or `d`
+
+`collection` = `col` or `c`
+
+`collections` = `cols`
+
+They can be used in place of any normal command. For example, to open the file for date 2021-12-01:
+
+```console
+foo@bar:~$ ntbk d 2021-12-01
 ```
 
 ## Config
