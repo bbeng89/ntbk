@@ -105,3 +105,13 @@ def test_template_with_all_vars(dispatcher, ntbk_dir, template_factory):
 
     assert expected_file.read_text() == '# Review of Dune by Frank Herbert\n'\
         'Written by John Doe on 2021-12-25'
+
+@freeze_time('2021-01-01')
+def test_template_that_doesnt_exist(dispatcher, ntbk_dir, mocker):
+    """Test creating a log file with the --template arg"""
+    mocker.patch('builtins.print')
+    expected_file = ntbk_dir / 'log/2021/01-january/2021-01-01/index.md'
+    dispatcher.run(['today', '--template', 'does-not-exist'])
+    print.assert_called_once_with('Template "does-not-exist" not found.')
+    dispatcher.filesystem.open_file_in_editor.assert_called_with(expected_file)
+    assert expected_file.read_text() == ''

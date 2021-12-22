@@ -4,7 +4,7 @@
 from datetime import date, datetime
 
 # 3rd party imports
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 
 class Template():
@@ -48,8 +48,12 @@ class Template():
         variables = dict(self.get_variables())
         if extra_vars is not None:
             variables.update(extra_vars)
-        template = self.env.get_template(self.name + self.EXTENSION)
-        return template.render(**variables)
+        try:
+            template = self.env.get_template(self.name + self.EXTENSION)
+            return template.render(**variables)
+        except TemplateNotFound:
+            print(f'Template "{self.name}" not found.')
+            return ''
 
     def set_extra_vars(self, variables):
         """Set extra variables to be sent to the template when its rendered
