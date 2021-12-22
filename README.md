@@ -46,7 +46,9 @@ I used to be a dedicated bullet journaler until I got tired of not always having
 
 ## Installation
 
-TODO - once I get it deployed to PyPi.
+```console
+foo@bar:~$ pip install ntbk
+```
 
 Once installed, just run:
 
