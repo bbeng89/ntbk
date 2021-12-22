@@ -96,11 +96,13 @@ class LogFile():
         Get the default template name for this file as defined in the config file.
         Returns None if there isn't one.
         """
-        return self.config\
-            .get('default_templates', {})\
-            .get('log', {})\
-            .get(self.filename, None)
-
+        # i'd like to find a more elegant solution for accessing these nested dicts
+        if not self.config.get('default_templates'):
+            return None
+        if not self.config.get('default_templates').get('log'):
+            return None
+        return self.config.get('default_templates').get('log').get(self.filename)
+        
     def has_default_template(self):
         """Whether or not this file has a default template defined in the config file"""
         return self.get_default_template_name() is not None

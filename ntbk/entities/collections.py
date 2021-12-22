@@ -37,7 +37,12 @@ class Collection():
 
     def get_default_template_name(self):
         """Get the default template name in the config file or None if there isn't one."""
-        return self.config.get('default_templates', {}).get('collection', {}).get(self.name, None)
+        # i'd like to find a more elegant solution for accessing these nested dicts
+        if not self.config.get('default_templates'):
+            return None
+        if not self.config.get('default_templates').get('collection'):
+            return None
+        return self.config.get('default_templates').get('collection').get(self.name)
 
     def get_default_template(self):
         """Get the default template Template object or None if there isn't one."""
