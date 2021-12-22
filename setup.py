@@ -10,7 +10,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name = 'ntbk',
-    version = '0.0.1',
+    version = '0.1.0',
     author = 'Blake Bengtson',
     author_email = 'blake@bengtson.us',
     license = 'MIT',
@@ -22,7 +22,12 @@ setup(
     install_requires = [requirements],
     python_requires='>=3.7',
     classifiers=[
-        "Productivity",
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "Intended Audience :: End Users/Desktop",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Utilities"
     ],
     entry_points = {
         'console_scripts': [
