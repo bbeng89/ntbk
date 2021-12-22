@@ -1,6 +1,5 @@
 """Test using templates with commands"""
 
-import pytest
 from freezegun import freeze_time
 
 @freeze_time('2021-01-01')
