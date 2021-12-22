@@ -22,9 +22,9 @@ def init_config_file(config):
             config.set('ntbk_dir', ntbk_dir)
 
         if not config.get('editor'):
-            editor = input('Editor (will fallback to $EDITOR, \
-                then finally vim if not specified):')\
-                or os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim'
+            editor = input('Editor (will fallback to $EDITOR, '\
+                'then finally vim if not specified): ')\
+                or (os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim')
 
             config.set('editor', editor)
 
