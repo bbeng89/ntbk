@@ -27,6 +27,7 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.7",
         "Topic :: Utilities"
     ],
     entry_points = {
