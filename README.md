@@ -5,7 +5,10 @@
 A simple, opinionated terminal notebook inspired by bullet journaling. 
 </p>
 
+![](https://img.shields.io/pypi/v/ntbk)
+![](https://img.shields.io/pypi/pyversions/ntbk)
 ![](https://github.com/bbeng89/ntbk/workflows/Tests/badge.svg)
+![](https://img.shields.io/github/license/bbeng89/ntbk)
 
 # Contents
 
@@ -46,7 +49,9 @@ I used to be a dedicated bullet journaler until I got tired of not always having
 
 ## Installation
 
-TODO - once I get it deployed to PyPi.
+```console
+foo@bar:~$ pip install ntbk
+```
 
 Once installed, just run:
 
