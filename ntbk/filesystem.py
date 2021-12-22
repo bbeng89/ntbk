@@ -1,7 +1,7 @@
 """Provides Fileystem class for interacting with the filesystem"""
 
 # system imports
-import os
+import subprocess
 from pathlib import Path
 
 
@@ -61,4 +61,4 @@ class Filesystem():
         Arguments:
             path -- String or Path object. Must be the absolute path
         """
-        os.system(f"{self.config.get('editor')} {path}")
+        subprocess.run([self.config.get('editor'), path])
