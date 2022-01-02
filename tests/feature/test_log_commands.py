@@ -149,3 +149,12 @@ def test_jot_default_file_timestamped(dispatcher, ntbk_dir, mocker):
     dispatcher.run(['jot', 'hello world', '-s'])
     assert expected_path.read_text() == '\n\n[10:15 AM]\nhello world'
     print.assert_called_once_with(f"{Fore.GREEN}Jotted note to today's index file{Style.RESET_ALL}")
+
+@freeze_time("2021-12-30")
+def test_jot_other_file(dispatcher, ntbk_dir, mocker):
+    """Test jotting note without any args to todays default file"""
+    mocker.patch('builtins.print')
+    expected_path = ntbk_dir / 'log/2021/12-december/2021-12-30/work.md'
+    dispatcher.run(['jot', 'hello world', 'work'])
+    assert expected_path.read_text() == '\n\nhello world'
+    print.assert_called_once_with(f"{Fore.GREEN}Jotted note to today's work file{Style.RESET_ALL}")
