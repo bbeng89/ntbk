@@ -3,6 +3,7 @@
 # 3rd party imports
 import pytest
 from freezegun import freeze_time
+from colorama import Fore, Style
 
 
 @freeze_time("2021-12-30")
@@ -130,3 +131,12 @@ def test_finding_logdate(dispatcher, ntbk_dir, mocker):
     expected_path = ntbk_dir / 'log/2021/01-january/2021-01-01'
     dispatcher.run(['today', '--find-dir'])
     print.assert_called_once_with(expected_path)
+
+@freeze_time("2021-12-30")
+def test_jot_default_file(dispatcher, ntbk_dir, mocker):
+    """Test jotting note without any args to todays default file"""
+    mocker.patch('builtins.print')
+    expected_path = ntbk_dir / 'log/2021/12-december/2021-12-30/index.md'
+    dispatcher.run(['jot', 'hello world'])
+    assert expected_path.read_text() == '\n\nhello world'
+    print.assert_called_once_with(f"{Fore.GREEN}Jotted note to today's index file{Style.RESET_ALL}")

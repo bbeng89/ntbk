@@ -52,6 +52,9 @@ class Filesystem():
             filepath -- Path object to the file
             content -- string content to write to the file
         """
+        # in case the parent directories don't exist yet
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+
         with filepath.open(mode='a') as file:
             file.write(content)
 
