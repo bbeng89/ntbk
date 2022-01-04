@@ -30,7 +30,7 @@ def run():
         exit_with_err(err)
     except KeyboardInterrupt:
         sys.exit(0)
-    except Exception as err:
+    except Exception as err: #pylint: disable=broad-except
         exit_with_err(err)
 
 if __name__ == '__main__':
