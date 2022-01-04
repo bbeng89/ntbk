@@ -17,16 +17,16 @@ def init_config_file(config):
     if not config.config_file_exists():
         config.reset_to_defaults()
 
-        if not config.get('ntbk_dir'):
-            ntbk_dir = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
-            config.set('ntbk_dir', ntbk_dir)
+    if not config.get('ntbk_dir'):
+        ntbk_dir = input('Enter notebook save directory (default = ~/ntbk): ') or '~/ntbk'
+        config.set('ntbk_dir', ntbk_dir)
 
-        if not config.get('editor'):
-            editor = input('Editor (will fallback to $EDITOR, '\
-                'then finally vim if not specified): ')\
-                or (os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim')
+    if not config.get('editor'):
+        editor = input('Editor (will fallback to $EDITOR, '\
+            'then finally vim if not specified): ')\
+            or (os.environ['EDITOR'] if 'EDITOR' in os.environ else 'vim')
 
-            config.set('editor', editor)
+        config.set('editor', editor)
 
     if not config.is_valid():
         raise InvalidConfigException()
