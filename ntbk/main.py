@@ -13,6 +13,11 @@ from ntbk.dispatcher import Dispatcher
 from ntbk.filesystem import Filesystem
 from ntbk.exceptions import InvalidConfigException
 
+def exit_with_err(err):
+    """Print the error and exit the application"""
+    print(err, file=sys.stderr)
+    sys.exit(1)
+
 def run():
     """Run the application"""
     try:
@@ -22,8 +27,9 @@ def run():
         initialize.init_app(config)
         Dispatcher(config, filesystem).run(sys.argv[1:])
     except InvalidConfigException as err:
-        print(err, file=sys.stderr)
-        sys.exit(1)
+        exit_with_err(err)
+    except KeyboardInterrupt:
+        sys.exit(0)
 
 if __name__ == '__main__':
     run()
