@@ -13,7 +13,8 @@ def test_listing_templates(dispatcher, filesystem, mocker):
 
     dispatcher.run(['templates'])
 
-    print.assert_has_calls([call('template_one'), call('template_two')], any_order=True)
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([call('template_one'), call('template_two')], any_order=False)
 
 def test_listing_collections(dispatcher, filesystem, mocker):
     """Test 'collections' command lists all collections"""
@@ -29,10 +30,12 @@ def test_listing_collections(dispatcher, filesystem, mocker):
     for alias in aliases:
         dispatcher.run([alias])
 
+        # With any_order=False we make sure they are printed in this order too
         print.assert_has_calls([
             call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'),
             call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')],
-            any_order=True)
+            any_order=False)
+
         print.reset_mock()
 
 @freeze_time("2020-01-01")
@@ -47,7 +50,8 @@ def test_listing_log_files_for_day(dispatcher, filesystem, mocker):
 
     dispatcher.run(['today', '--list'])
 
-    print.assert_has_calls([call('index'), call('work')], any_order=True)
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([call('index'), call('work')], any_order=False)
 
 def test_listing_collection_files(dispatcher, filesystem, mocker):
     """test --list flag on collection lists all collection files"""
@@ -57,7 +61,9 @@ def test_listing_collection_files(dispatcher, filesystem, mocker):
     col_path.mkdir(parents=True)
     (col_path / 'montana.md').touch()
     (col_path / 'utah.md').touch()
+    (col_path / 'alaska.md').touch()
 
     dispatcher.run(['collection', 'travel', '--list'])
 
-    print.assert_has_calls([call('montana'), call('utah')], any_order=True)
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([call('alaska'), call('montana'), call('utah')], any_order=False)
