@@ -89,5 +89,7 @@ class Template():
 
 def get_all_templates(config, filesystem):
     """Get a list of Template objects for all templates in the notebook"""
-    return [Template(config, filesystem, child.stem)
+    templates = [Template(config, filesystem, child.stem)
         for child in filesystem.get_templates_base_path().glob('*.md')]
+
+    return sorted(templates, key=lambda template: template.get_name().lower())
