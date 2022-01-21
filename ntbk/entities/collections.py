@@ -135,6 +135,7 @@ def get_all_collections(config, filesystem):
         config - Config instance
         filesystem - Filesystem instance
     """
-    return [Collection(config, filesystem, child.stem)
+    collections = [Collection(config, filesystem, child.stem)
         for child in filesystem.get_collection_base_path().glob('*/')]
-        
+
+    return sorted(collections, key=lambda col: col.get_name().lower())

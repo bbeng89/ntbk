@@ -86,12 +86,12 @@ class Dispatcher():
         self.filesystem.open_file_in_editor(entity.get_path())
 
     def list_entities(self, entities): #pylint: disable=no-self-use
-        """Takes a list of LogFile or CollectionFile objects and prints out their names
+        """Takes a list of LogFile or CollectionFile objects and prints out their names, sorted a-z
 
         Arguments:
             entities - List of LogFile and/or CollectionFile objects
         """
-        for entity in entities:
+        for entity in sorted(entities, key=lambda e: e.get_name().lower()):
             print(entity.get_name())
 
     def handle_logfile_command(self, args):
