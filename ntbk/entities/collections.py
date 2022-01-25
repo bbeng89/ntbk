@@ -50,10 +50,14 @@ class Collection():
             return None
         return Template(self.config, self.filesystem, self.get_default_template_name())
 
+    def get_contents(self):
+        """Gets a list of files and folders inside this collection"""
+        return list(self.get_path().glob('*'))
+
     def get_files(self):
         """Get a list of CollectionFile objects for each file in this collection"""
         return [CollectionFile(self.config, self.filesystem, self.name, child.stem)
-            for child in self.get_path().glob('*.md')]
+            for child in self.get_path().glob('*')]
 
     def get_file_count(self):
         """Get int number of files in this collection"""

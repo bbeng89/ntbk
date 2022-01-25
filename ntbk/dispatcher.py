@@ -85,14 +85,18 @@ class Dispatcher():
 
         self.filesystem.open_file_in_editor(entity.get_path())
 
-    def list_entities(self, entities): #pylint: disable=no-self-use
-        """Takes a list of LogFile or CollectionFile objects and prints out their names, sorted a-z
+    def list_contents(self, entity): #pylint: disable=no-self-use
+        """Takes a LogDate or Collection and lists its contents (files and immediate folders)
 
         Arguments:
-            entities - List of LogFile and/or CollectionFile objects
+            entity - Either LogDate or Collection
         """
-        for entity in sorted(entities, key=lambda e: e.get_name().lower()):
-            print(entity.get_name())
+        #for path in sorted(paths, key=lambda e: e.stem.lower()):
+        for path in sorted(entity.get_contents(), key=lambda p: p.stem.lower()):
+            if path.is_dir():
+                print(Fore.BLUE + path.stem + '/' + Style.RESET_ALL)
+            else:
+                print(path.stem)
 
     def handle_logfile_command(self, args):
         """Handler for commands involving log files.
@@ -109,7 +113,7 @@ class Dispatcher():
         logfile = LogFile(self.config, self.filesystem, date_obj, args.file)
 
         if args.list:
-            self.list_entities(logfile.logdate.get_files())
+            self.list_contents(logfile.logdate)
         elif args.find:
             print(logfile.get_path())
         elif args.find_dir:
@@ -127,7 +131,7 @@ class Dispatcher():
             args.collection_name, args.file)
 
         if args.list:
-            self.list_entities(collection_file.collection.get_files())
+            self.list_contents(collection_file.collection)
         elif args.find:
             print(collection_file.get_path())
         elif args.find_dir:

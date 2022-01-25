@@ -28,6 +28,10 @@ class LogDate():
         return (self.filesystem.get_log_base_path() /
             f"{self.date_obj.strftime('%Y/%m-%B/%Y-%m-%d').lower()}")
 
+    def get_contents(self):
+        """Get all the files and folders as Path objects for this date"""
+        return list(self.get_path().glob('*'))
+
     def get_files(self):
         """Get all the files for this log date"""
         return [LogFile(self.config, self.filesystem, self.date_obj, child.stem)
