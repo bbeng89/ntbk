@@ -28,9 +28,10 @@ class LogDate():
         return (self.filesystem.get_log_base_path() /
             f"{self.date_obj.strftime('%Y/%m-%B/%Y-%m-%d').lower()}")
 
-    def get_contents(self):
+    def get_contents(self, recursive=False):
         """Get all the files and folders as Path objects for this date"""
-        return list(self.get_path().glob('*'))
+        pattern = '**/*' if recursive else '*'
+        return list(self.get_path().glob(pattern))
 
     def get_files(self):
         """Get all the files for this log date"""
@@ -82,11 +83,13 @@ class LogFile():
         """This is awkward, but sometimes the LogFile is actually a dir"""
         return (self.logdate.get_path() / self.filename).is_dir()
 
-    def get_contents(self):
+    def get_contents(self, recursive):
         """If this is a dir, not file, then this will print its contents"""
         if not self.is_dir():
             raise Exception(f'{self.filename} is a file')
-        return list((self.logdate.get_path() / self.filename).glob('*'))
+
+        pattern = '**/*' if recursive else '*'
+        return list((self.logdate.get_path() / self.filename).glob(pattern))
 
     def get_logdate(self):
         """Get the LogDate object this file belongs to"""
