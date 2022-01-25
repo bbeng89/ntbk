@@ -78,6 +78,16 @@ class LogFile():
         """Get the name of this file (without extension)"""
         return self.filename
 
+    def is_dir(self):
+        """This is awkward, but sometimes the LogFile is actually a dir"""
+        return (self.logdate.get_path() / self.filename).is_dir()
+
+    def get_contents(self):
+        """If this is a dir, not file, then this will print its contents"""
+        if not self.is_dir():
+            raise Exception(f'{self.filename} is a file')
+        return list((self.logdate.get_path() / self.filename).glob('*'))
+
     def get_logdate(self):
         """Get the LogDate object this file belongs to"""
         return self.logdate

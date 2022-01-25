@@ -112,7 +112,9 @@ class Dispatcher():
 
         logfile = LogFile(self.config, self.filesystem, date_obj, args.file)
 
-        if args.list:
+        if args.list and args.file.endswith('/'):
+            self.list_contents(logfile)
+        elif args.list:
             self.list_contents(logfile.logdate)
         elif args.find:
             print(logfile.get_path())
