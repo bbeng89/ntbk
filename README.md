@@ -255,6 +255,15 @@ You can go as deep as you want with this:
 foo@bar:~$: ntbk today work/meetings/ --list
 ```
 
+In both collections and logs you can use the `--recursive` or `-r` flag to recursively list all files:
+
+```console
+foo@bar:~$: ntbk c books -lr
+```
+
+```console
+foo@bar:~$: ntbk tod -lr
+```
 
 ### Writing Templates
 
