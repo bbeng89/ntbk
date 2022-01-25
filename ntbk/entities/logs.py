@@ -73,7 +73,8 @@ class LogFile():
 
     def get_path(self):
         """Get the pathlib.Path object to this log date file"""
-        return self.logdate.get_path() / f'{self.filename}{self.EXTENSION}'
+        fname = self.filename if self.is_dir() else f'{self.filename}{self.EXTENSION}'
+        return self.logdate.get_path() / fname
 
     def get_name(self):
         """Get the name of this file (without extension)"""
@@ -89,7 +90,7 @@ class LogFile():
             raise Exception(f'{self.filename} is a file')
 
         pattern = '**/*' if recursive else '*'
-        return list((self.logdate.get_path() / self.filename).glob(pattern))
+        return list(self.get_path().glob(pattern))
 
     def get_logdate(self):
         """Get the LogDate object this file belongs to"""
@@ -135,4 +136,4 @@ class LogFile():
 
     def create_directories(self):
         """Creates all the parent directories for this file (does not actually create the file)"""
-        self.logdate.create_directories()
+        self.get_path().parent.mkdir(parents=True, exist_ok=True)

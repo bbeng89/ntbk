@@ -97,7 +97,7 @@ class Dispatcher():
                 text = path.relative_to(entity.get_path())
                 if path.is_dir():
                     text = Fore.BLUE + str(text) + '/' + Style.RESET_ALL
-                print(text)
+                print(str(text).replace(path.suffix, ''))
         else:
             for path in sorted(entity.get_contents(recursive), key=lambda p: p.stem.lower()):
                 if path.is_dir():
