@@ -148,10 +148,7 @@ class Dispatcher():
             _args -- Args from argparsed. Underscored because they are not used
         """
         for collection in get_all_collections(self.config, self.filesystem):
-            fcount = collection.get_file_count()
-            countstr = f'{fcount} {"file" if fcount == 1 else "files"}'
-            color = Fore.BLUE if fcount == 1 else Fore.GREEN
-            print(f'{collection.get_name()} {color}[{countstr}]{Style.RESET_ALL}')
+            print(collection.get_name())
 
     def handle_list_templates_command(self, _args):
         """Handler for the 'templates' command

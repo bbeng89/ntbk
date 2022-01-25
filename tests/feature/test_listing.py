@@ -32,8 +32,8 @@ def test_listing_collections(dispatcher, filesystem, mocker):
 
         # With any_order=False we make sure they are printed in this order too
         print.assert_has_calls([
-            call(f'books {Fore.BLUE}[1 file]{Style.RESET_ALL}'),
-            call(f'recipes {Fore.GREEN}[2 files]{Style.RESET_ALL}')],
+            call('books'),
+            call('recipes')],
             any_order=False)
 
         print.reset_mock()
