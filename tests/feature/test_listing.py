@@ -123,7 +123,7 @@ def test_listing_log_subdir_files_for_day(dispatcher, filesystem, mocker):
         any_order=False)
 
 def test_listing_collection_subdir_files_recursive(dispatcher, filesystem, mocker):
-    """test --list flag on a nested collection lists all files"""
+    """test -lr flag on a nested collection lists all files"""
     mocker.patch('builtins.print')
     col_base = filesystem.get_collection_base_path()
     col_path = col_base / 'travel'
@@ -145,4 +145,27 @@ def test_listing_collection_subdir_files_recursive(dispatcher, filesystem, mocke
         call('wyoming/index'),
         call(Fore.BLUE + 'wyoming/laramie/' + Style.RESET_ALL),
         call('wyoming/laramie/restaurants')],
+        any_order=False)
+
+@freeze_time("2020-01-01")
+def test_listing_log_files_for_day_recursive(dispatcher, filesystem, mocker):
+    """Test -lr flag on log lists all files"""
+    mocker.patch('builtins.print')
+    log_base = filesystem.get_log_base_path()
+    day_path = log_base / '2020/01-january/2020-01-01'
+    day_path.mkdir(parents=True)
+    (day_path / 'index.md').touch()
+    (day_path / 'journal').mkdir()
+    (day_path / 'journal' / 'morning.md').touch()
+    (day_path / 'journal' / 'evening.md').touch()
+
+    # For LogDate the path is in the file, but must end with a slash
+    dispatcher.run(['today', '-lr'])
+
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([
+        call('index'),
+        call(Fore.BLUE + 'journal/' + Style.RESET_ALL),
+        call('journal/evening'),
+        call('journal/morning')],
         any_order=False)
