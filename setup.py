@@ -10,7 +10,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name = 'ntbk',
-    version = '0.1.2',
+    version = '0.2.0',
     author = 'Blake Bengtson',
     author_email = 'blake@bengtson.us',
     license = 'MIT',
