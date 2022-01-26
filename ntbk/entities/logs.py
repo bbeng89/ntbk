@@ -28,6 +28,11 @@ class LogDate():
         return (self.filesystem.get_log_base_path() /
             f"{self.date_obj.strftime('%Y/%m-%B/%Y-%m-%d').lower()}")
 
+    def get_contents(self, recursive=False):
+        """Get all the files and folders as Path objects for this date"""
+        pattern = '**/*' if recursive else '*'
+        return list(self.get_path().glob(pattern))
+
     def get_files(self):
         """Get all the files for this log date"""
         return [LogFile(self.config, self.filesystem, self.date_obj, child.stem)
@@ -68,11 +73,24 @@ class LogFile():
 
     def get_path(self):
         """Get the pathlib.Path object to this log date file"""
-        return self.logdate.get_path() / f'{self.filename}{self.EXTENSION}'
+        fname = self.filename if self.is_dir() else f'{self.filename}{self.EXTENSION}'
+        return self.logdate.get_path() / fname
 
     def get_name(self):
         """Get the name of this file (without extension)"""
         return self.filename
+
+    def is_dir(self):
+        """This is awkward, but sometimes the LogFile is actually a dir"""
+        return (self.logdate.get_path() / self.filename).is_dir()
+
+    def get_contents(self, recursive):
+        """If this is a dir, not file, then this will print its contents"""
+        if not self.is_dir():
+            raise Exception(f'{self.filename} is a file')
+
+        pattern = '**/*' if recursive else '*'
+        return list(self.get_path().glob(pattern))
 
     def get_logdate(self):
         """Get the LogDate object this file belongs to"""
@@ -118,4 +136,4 @@ class LogFile():
 
     def create_directories(self):
         """Creates all the parent directories for this file (does not actually create the file)"""
-        self.logdate.create_directories()
+        self.get_path().parent.mkdir(parents=True, exist_ok=True)

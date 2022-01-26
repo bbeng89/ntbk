@@ -85,14 +85,25 @@ class Dispatcher():
 
         self.filesystem.open_file_in_editor(entity.get_path())
 
-    def list_entities(self, entities): #pylint: disable=no-self-use
-        """Takes a list of LogFile or CollectionFile objects and prints out their names, sorted a-z
+    def list_contents(self, entity, recursive=False): #pylint: disable=no-self-use
+        """Takes a LogDate or Collection and lists its contents (files and immediate folders)
 
         Arguments:
-            entities - List of LogFile and/or CollectionFile objects
+            entity - Either LogDate or Collection
+            recursive - Boolean - traverse all subdirs and print out all files
         """
-        for entity in sorted(entities, key=lambda e: e.get_name().lower()):
-            print(entity.get_name())
+        if recursive:
+            for path in sorted(entity.get_contents(recursive), key=lambda p: str(p).lower()):
+                text = path.relative_to(entity.get_path())
+                if path.is_dir():
+                    text = Fore.BLUE + str(text) + '/' + Style.RESET_ALL
+                print(str(text).replace(path.suffix, ''))
+        else:
+            for path in sorted(entity.get_contents(recursive), key=lambda p: p.stem.lower()):
+                if path.is_dir():
+                    print(Fore.BLUE + path.stem + '/' + Style.RESET_ALL)
+                else:
+                    print(path.stem)
 
     def handle_logfile_command(self, args):
         """Handler for commands involving log files.
@@ -108,8 +119,10 @@ class Dispatcher():
 
         logfile = LogFile(self.config, self.filesystem, date_obj, args.file)
 
-        if args.list:
-            self.list_entities(logfile.logdate.get_files())
+        if args.list and args.file.endswith('/'):
+            self.list_contents(logfile, args.recursive)
+        elif args.list:
+            self.list_contents(logfile.logdate, args.recursive)
         elif args.find:
             print(logfile.get_path())
         elif args.find_dir:
@@ -127,7 +140,7 @@ class Dispatcher():
             args.collection_name, args.file)
 
         if args.list:
-            self.list_entities(collection_file.collection.get_files())
+            self.list_contents(collection_file.collection, args.recursive)
         elif args.find:
             print(collection_file.get_path())
         elif args.find_dir:
@@ -142,10 +155,7 @@ class Dispatcher():
             _args -- Args from argparsed. Underscored because they are not used
         """
         for collection in get_all_collections(self.config, self.filesystem):
-            fcount = collection.get_file_count()
-            countstr = f'{fcount} {"file" if fcount == 1 else "files"}'
-            color = Fore.BLUE if fcount == 1 else Fore.GREEN
-            print(f'{collection.get_name()} {color}[{countstr}]{Style.RESET_ALL}')
+            print(collection.get_name())
 
     def handle_list_templates_command(self, _args):
         """Handler for the 'templates' command
@@ -192,6 +202,8 @@ class Dispatcher():
 
         parser_today.add_argument('--list', '-l', action='store_true', help="List today's files")
 
+        parser_today.add_argument('--recursive', '-r', action='store_true', help="List recursively")
+
         parser_today.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")
 
@@ -216,6 +228,8 @@ class Dispatcher():
 
         parser_yest.add_argument('--list', '-l', action='store_true', help="List yesterday's files")
 
+        parser_yest.add_argument('--recursive', '-r', action='store_true', help="List recursively")
+
         parser_yest.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")
 
@@ -239,6 +253,8 @@ class Dispatcher():
                 If value contains spaces, enclose it in quotes, e.g. key="my value"')
 
         parser_tom.add_argument('--list', '-l', action='store_true', help="List tomorrow's files")
+
+        parser_tom.add_argument('--recursive', '-r', action='store_true', help="List recursively")
 
         parser_tom.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")
@@ -266,6 +282,8 @@ class Dispatcher():
 
         parser_date.add_argument('--list', '-l', action='store_true',
             help="List given date's files")
+
+        parser_date.add_argument('--recursive', '-r', action='store_true', help="List recursively")
 
         parser_date.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")
@@ -297,6 +315,9 @@ class Dispatcher():
 
         parser_collection.add_argument('--list', '-l', action='store_true',
             help='List the files in given collection')
+
+        parser_collection.add_argument('--recursive', '-r', action='store_true',
+            help="List recursively")
 
         parser_collection.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")

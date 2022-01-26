@@ -24,6 +24,7 @@ A simple, opinionated terminal notebook inspired by bullet journaling.
     - [Jotting notes](#jotting-notes)
     - [Opening collections](#opening-collections)
     - [Listing collections](#listing-collections)
+    - [Subdirectories in collections and logs](#subdirectories-in-collections-and-logs)
     - [Writing Templates](#writing-templates)
     - [Using templates](#using-templates)
     - [Listing available templates](#listing-available-templates)
@@ -217,6 +218,51 @@ To list all the files within a collection
 foo@bar:~$ ntbk collection books --list
 1984
 brave-new-world
+```
+
+### Subdirectories in collections and logs
+
+For collections, subdirectories are specified as part of the collection name:
+
+```console
+foo@bar:~$ ntbk collection books/fiction the-hobbit
+```
+This would open/create `collections/books/fiction/the-hobbit.md`
+
+Listing a subdirectory is the same:
+
+```console
+foo@bar:~$ ntbk collection books/fiction --list
+```
+
+Logs are different since an alias like `today` or `yesterday` is often used. So for logs you specify the path with the filename.
+
+```console
+foo@bar:~$ ntbk today work/meeting-notes
+```
+
+This would open/create `log/2021/12-december/2021-12-16/work/meeting-notes.md`
+
+To list files for this new `work` directory, just add a forward slash to the directory name and use the `--list` flag:
+
+```console
+foo@bar:~$: ntbk today work/ --list
+```
+
+You can go as deep as you want with this:
+
+```console
+foo@bar:~$: ntbk today work/meetings/ --list
+```
+
+In both collections and logs you can use the `--recursive` or `-r` flag to recursively list all files:
+
+```console
+foo@bar:~$: ntbk c books -lr
+```
+
+```console
+foo@bar:~$: ntbk tod -lr
 ```
 
 ### Writing Templates
