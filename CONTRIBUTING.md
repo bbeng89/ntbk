@@ -26,20 +26,20 @@ foo@bar:~$ python setup.py develop
 
 Build:
 
-```
-python setup.py sdist bdist_wheel
+```console
+foo@bar:~$ python setup.py sdist bdist_wheel
 ```
 
 Publish to test.pypi.org
 
-```
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+```console
+foo@bar:~$ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 ```
 
 Publish to pypi.org
 
-```
-twine upload dist/*
+```console
+foo@bar:~$ twine upload dist/*
 ```
 
 ## Tests
