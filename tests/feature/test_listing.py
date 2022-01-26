@@ -169,3 +169,28 @@ def test_listing_log_files_for_day_recursive(dispatcher, filesystem, mocker):
         call('journal/evening'),
         call('journal/morning')],
         any_order=False)
+
+@freeze_time("2020-01-01")
+def test_listing_log_subdir_recursive(dispatcher, filesystem, mocker):
+    """Test -lr flag on log subdirectory lists all files in that subdir"""
+    mocker.patch('builtins.print')
+    log_base = filesystem.get_log_base_path()
+    day_path = log_base / '2020/01-january/2020-01-01'
+    day_path.mkdir(parents=True)
+    (day_path / 'index.md').touch()
+    (day_path / 'journal').mkdir()
+    (day_path / 'journal' / 'morning.md').touch()
+    (day_path / 'journal' / 'evening.md').touch()
+    (day_path / 'journal' / 'afternoon').mkdir()
+    (day_path / 'journal' / 'afternoon' / 'index.md').touch()
+
+    # For LogDate the path is in the file, but must end with a slash
+    dispatcher.run(['today', 'journal/', '-lr'])
+
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([
+        call(Fore.BLUE + 'afternoon/' + Style.RESET_ALL),
+        call('afternoon/index'),
+        call('evening'),
+        call('morning')],
+        any_order=False)
