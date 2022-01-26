@@ -121,3 +121,28 @@ def test_listing_log_subdir_files_for_day(dispatcher, filesystem, mocker):
         call('evening'),
         call('morning')],
         any_order=False)
+
+def test_listing_collection_subdir_files_recursive(dispatcher, filesystem, mocker):
+    """test --list flag on a nested collection lists all files"""
+    mocker.patch('builtins.print')
+    col_base = filesystem.get_collection_base_path()
+    col_path = col_base / 'travel'
+    col_path.mkdir(parents=True)
+    (col_path / 'montana.md').touch() # should be ignored
+    (col_path / 'alaska.md').touch() # should be ignored
+    (col_path / 'wyoming').mkdir()
+    (col_path / 'wyoming' / 'index.md').touch()
+    (col_path / 'wyoming' / 'laramie').mkdir()
+    (col_path / 'wyoming' / 'laramie' / 'restaurants.md').touch()
+
+    dispatcher.run(['collection', 'travel', '-lr'])
+
+    # With any_order=False we make sure they are printed in this order too
+    print.assert_has_calls([
+        call('alaska'),
+        call('montana'),
+        call(Fore.BLUE + 'wyoming/' + Style.RESET_ALL),
+        call('wyoming/index'),
+        call(Fore.BLUE + 'wyoming/laramie/' + Style.RESET_ALL),
+        call('wyoming/laramie/restaurants')],
+        any_order=False)

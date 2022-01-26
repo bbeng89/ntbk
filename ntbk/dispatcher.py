@@ -316,7 +316,8 @@ class Dispatcher():
         parser_collection.add_argument('--list', '-l', action='store_true',
             help='List the files in given collection')
 
-        parser_collection.add_argument('--recursive', '-r', action='store_true', help="List recursively")
+        parser_collection.add_argument('--recursive', '-r', action='store_true',
+            help="List recursively")
 
         parser_collection.add_argument('--find', '-f', action='store_true',
             help="Output the path to the file")
